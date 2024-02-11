@@ -17,7 +17,7 @@ nav {
   width: 100%; /* Hace que el navbar ocupe todo el ancho de la pantalla */
   background-color: #333; /* Color de fondo del navbar */
   color: #fff; /* Color del texto del navbar */
-  padding: 2rem; /* Agrega un espacio interno al navbar */
+  padding: 1rem; /* Agrega un espacio interno al navbar */
   box-sizing: border-box; /* Incluye el padding en el ancho del navbar */
 }
 
@@ -35,4 +35,18 @@ nav li {
 
 nav li:last-child {
   margin-right: 0; /* Elimina el margen del último elemento */
+}
+.botonNav {
+  background-color: #007bff; /* Color de fondo del botón */
+  color: white; /* Color del texto del botón */
+  border: none; /* Elimina el borde del botón */
+  padding: 10px 20px; /* Espaciado interno del botón */
+  font-size: 16px; /* Tamaño de la fuente del botón */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  text-decoration: none; /* Elimina la subrayado del enlace */
+  border-radius: 5px; /* Añade esquinas redondeadas al botón */
+}
+
+.botonNav:hover {
+  background-color:green; /* Cambia el color de fondo al pasar sobre el botón */
 }

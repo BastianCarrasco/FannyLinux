@@ -1,8 +1,14 @@
 import React from 'react'
+import AgrandarMenu from '../Modal/AgrandarMenu'
 
 function Stock() {
   return (
-    <div>Stock</div>
+    <div>Stock
+        
+<AgrandarMenu></AgrandarMenu>
+    </div>
+
+    
   )
 }
 

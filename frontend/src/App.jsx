@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Link, Route, Routes, Navigate } from 'react-router-dom';
 
 import './App.css';
-import Caja from './Vistas/Caja'; // Asegúrate de importar el componente Caja desde la ubicación correcta
+import Caja from './Vistas/Caja';
 import Cola from './Vistas/Cola';
 import Encargos from './Vistas/Encargos';
 import Stock from './Vistas/Stock';
@@ -12,7 +12,7 @@ function Home() {
   const [count, setCount] = useState(0);
 
   return (
-    <div style={{ width: "100%" }}> {/* Establece el ancho al 100% */}
+    <div style={{ width: "100%" }}>
       <h1>Colaciones Fanny</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -28,35 +28,38 @@ function Home() {
 
 function App() {
   return (
-    <Router >
+    <Router>
       <div>
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className='botonNav'>Home</Link>
             </li>
             <li>
-              <Link to="/caja">Caja</Link> {/* Cambiamos "/about" por "/caja" */}
+              <Link to="/caja" className='botonNav'>Caja</Link>
             </li>
             <li>
-              <Link to="/cola">Cola</Link> {/* Cambiamos "/about" por "/caja" */}
-            </li>
-
-            <li>
-              <Link to="/caja">Encargos</Link> {/* Cambiamos "/about" por "/caja" */}
+              <Link to="/cola" className='botonNav'>Cola</Link>
             </li>
             <li>
-              <Link to="/caja">Menu</Link> {/* Cambiamos "/about" por "/caja" */}
+              <Link to="/encargos" className='botonNav'>Encargos</Link>
             </li>
             <li>
-              <Link to="/caja">Stock</Link> {/* Cambiamos "/about" por "/caja" */}
+              <Link to="/menu" className='botonNav'>Menu</Link>
+            </li>
+            <li>
+              <Link to="/stock" className='botonNav'>Stock</Link>
             </li>
           </ul>
         </nav>
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/caja" element={<Caja />} /> {/* Usamos el componente Caja en lugar de About */}
+          <Route path="/caja" element={<Caja />} />
+          <Route path="/cola" element={<Cola />} />
+          <Route path="/encargos" element={<Encargos />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/stock" element={<Stock />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
@@ -65,6 +68,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
