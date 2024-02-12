@@ -129,3 +129,23 @@ nav li:last-child {
 .ToastContainer{
   z-index: 1001;
 }
+
+.menu-container {
+  padding: 20px;
+}
+
+.tables-container {
+  display: flex;
+  border: solid;
+  border-color: black;
+}
+
+.day-table {
+  width: calc(100% / 6); /* Cada tabla ocupa 1/6 de la pantalla */
+  border: solid;
+  border-color: black;
+}
+
+.day-table h3 {
+  width: 100px; /* ajusta este valor según sea necesario */
+}

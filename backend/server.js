@@ -88,6 +88,22 @@ app.put('/actualizar-menu/:id', (req, res) => {
   });
 });
 
+app.get('/datosSemana', (req, res) => {
+  // Query para seleccionar todos los datos del menú
+  const query = 'SELECT Semana.numero, Dia.dia, Menu.id,Menu.nombre,Menu.tipo,Menu.precio,Semana.stockD FROM Menu JOIN Semana JOIN Dia where Semana.id_menu=Menu.id and Semana.id_dia=Dia.id ';
+
+  // Ejecutar la consulta
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al obtener datos del menú:', error);
+      res.status(500).json({ error: 'Error al obtener datos del menú' });
+    } else {
+      // Enviar los resultados como respuesta
+      res.status(200).json(results);
+    }
+  });
+});
+
 
 
 

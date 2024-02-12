@@ -72,13 +72,15 @@ function Stock() {
           <option value="9">Special</option>
         </select>
 
+        <br></br>
+
         <table style={{ width: '100%' }}>
           <thead>
             <tr>
-              <th style={{ width: '25%' }}>Nombre</th>
-              <th style={{ width: '25%' }}>Tipo</th>
-              <th style={{ width: '25%' }}>Precio</th>
-              <th style={{ width: '25%' }}>Stock Total</th>
+              <th style={{ width: '33%' }}>Nombre</th>
+            
+              <th style={{ width: '33%' }}>Precio</th>
+              <th style={{ width: '33%' }}>Stock Total</th>
             </tr>
           </thead>
           <tbody>
@@ -86,10 +88,10 @@ function Stock() {
               .filter((item) => tipoFiltro === '' || item.tipo === parseInt(tipoFiltro))
               .map((item, index) => (
                 <tr key={index}>
-                  <td style={{ width: '25%' }}>{item.nombre}</td>
-                  <td style={{ width: '25%' }}>{item.tipo}</td>
-                  <td style={{ width: '25%' }}>{item.precio}</td>
-                  <td style={{ width: '25%' }}>
+                  <td style={{ width: '33%' }}>{item.nombre}</td>
+                 
+                  <td style={{ width: '33%' }}>{item.precio}</td>
+                  <td style={{ width: '33%' }}>
                     {item.tipo !== 1 && item.tipo !== 2 && item.tipo !== 3 && item.tipo !== 4 ? (
                       <input
                         style={{ width: '100%', textAlign: 'center' }}
@@ -106,11 +108,20 @@ function Stock() {
           </tbody>
         </table>
 
-        {hayCambios && (
-          <button onClick={handleGuardarCambios}>Guardar Cambios</button>
-        )}
+        <div>
+          <br></br><br></br>
+
+                    {hayCambios && (
+            <button style={{marginLeft:"40px"}} onClick={handleGuardarCambios}>Guardar Cambios</button>
+          )}
+
+        </div>
+
+
+
       </div>
       <div>
+
         <AgrandarMenu />
       </div>
     </div>

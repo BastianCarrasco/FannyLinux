@@ -45,7 +45,7 @@ function App() {
               <Link to="/encargos" className='botonNav'>Encargos</Link>
             </li>
             <li>
-              <Link to="/menu" className='botonNav'>Menu</Link>
+              <Link to="/menu" className='botonNav'>Menu Semana</Link>
             </li>
             <li>
               <Link to="/stock" className='botonNav'>Stock</Link>

@@ -119,6 +119,7 @@ function AgrandarMenu() {
                   <option value={7}>Postre</option>
                   <option value={8}>Otro</option>
                   <option value={9}>Special</option>
+                  <option value={10}>Guiso</option>
                 </select>
 
                 <label>Precio:</label>
