@@ -26,6 +26,23 @@ db.connect((err) => {
   console.log('Conexión establecida con la base de datos');
 });
 
+app.get('/datosMenu', (req, res) => {
+  // Query para seleccionar todos los datos del menú
+  const query = 'SELECT * FROM Menu';
+
+  // Ejecutar la consulta
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al obtener datos del menú:', error);
+      res.status(500).json({ error: 'Error al obtener datos del menú' });
+    } else {
+      // Enviar los resultados como respuesta
+      res.status(200).json(results);
+    }
+  });
+});
+
+
 app.post('/insertar-menu', (req, res) => {
   const { nombre, tipo, precio, stockG } = req.body;
   const query = `INSERT INTO Menu (nombre, tipo, precio, stockG) VALUES (?, ?, ?, ?)`;
@@ -51,6 +68,27 @@ app.delete('/quitar-menu', (req, res) => {
     }
   });
 });
+
+app.put('/actualizar-menu/:id', (req, res) => {
+  const { id } = req.params;
+  const { stockG } = req.body;
+
+  // Query de actualización
+  const sql = "UPDATE Menu SET stockG = ? WHERE id = ?";
+
+  // Ejecutar la consulta en la base de datos utilizando db.query en lugar de connection.query
+  db.query(sql, [stockG, id], (err, result) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ error: 'Error al actualizar el menú' });
+    } else {
+      console.log('Menú actualizado correctamente');
+      res.status(200).json({ message: 'Menú actualizado correctamente' });
+    }
+  });
+});
+
+
 
 
 // Escuchar en un puerto específico

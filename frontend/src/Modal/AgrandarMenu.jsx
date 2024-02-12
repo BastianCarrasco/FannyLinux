@@ -3,11 +3,11 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Popup from './PopUp';
-
+Modal.setAppElement('#root');
 function AgrandarMenu() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [nombre, setNombre] = useState('');
-  const [tipo, setTipo] = useState(0);
+  const [tipo, setTipo] = useState(1);
   const [precio, setPrecio] = useState(0);
   const [stockG, setStockG] = useState(0);
   const [enviado, setEnviado] = useState(false); // Nuevo estado para indicar si se ha enviado el menú
@@ -27,6 +27,7 @@ function AgrandarMenu() {
     setStockG(0);
     setEnviado(false);
     setEliminado(false);
+    window.location.reload();
   };
 
   const handleSubmit = async (e) => {
@@ -88,7 +89,7 @@ function AgrandarMenu() {
 
   return (
     <div>
-      <button onClick={openModal}>Abrir Modal</button>
+      <button onClick={openModal}>Agregar o Borrar</button>
       <Modal
         className="ModalAgregarMenu"
         isOpen={modalIsOpen}
@@ -103,7 +104,7 @@ function AgrandarMenu() {
           {(!enviado && !eliminado) && ( // Mostrar el formulario solo si no se ha enviado ni eliminado el menú
             <form onSubmit={handleSubmit}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label>Nombre:</label>
+                <label>Nombre:</label>
                 <input type="text" value={nombre} onChange={handleNombreChange} required placeholder="Nombre de al menos 8 letras" />
 
 
@@ -132,7 +133,7 @@ function AgrandarMenu() {
           {(enviado || eliminado) && ( // Mostrar mensaje de éxito si se ha enviado o eliminado el menú
             <div>
               <p>{enviado ? 'Menú enviado correctamente' : 'Menú eliminado correctamente'}</p>
-              <button onClick={closeModal}>Cerrar Modal</button>
+
             </div>
 
           )}
