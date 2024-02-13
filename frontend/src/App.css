@@ -149,3 +149,22 @@ nav li:last-child {
 .day-table h3 {
   width: 100px; /* ajusta este valor según sea necesario */
 }
+.container_Caja {
+  display: flex; /* Utiliza flexbox para el diseño */
+}
+
+.column_Caja {
+  flex: 1; /* Hace que ambas columnas tengan el mismo tamaño */
+  border: 1px solid black; /* Añade un borde para visualizar las columnas */
+  padding: 10px; /* Añade espacio interno */
+  text-align: left;
+}
+.boton-original {
+  background-color: yellow; /* Color original del botón */
+  margin: 5px; /* Espacio entre botones */
+}
+
+.boton-apretado {
+  background-color: green; /* Color cuando el botón está presionado */
+  margin: 5px; /* Espacio entre botones */
+}

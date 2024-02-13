@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { obtenerDatosSemana } from '../funciones backend/consultas';
+import SelecionMenuSemana from '../Modal/Componentes Semana/SelecionMenuSemana';
 
 function Menu() {
   const [semana, setSemana] = useState([]);
   const [semanaEditable, setSemanaEditable] = useState([]);
   const [mostrarSolo7, setMostrarSolo7] = useState(false);
+  const [diaM,setdia] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +42,7 @@ function Menu() {
   return (
     <div className="menu-container">
       <h2>Menú de la Semana</h2>
+      <SelecionMenuSemana></SelecionMenuSemana>
       <div>
         <input
           type="checkbox"
@@ -53,6 +56,7 @@ function Menu() {
           <table key={indexDia} className="day-table">
             <thead>
               <h3>{dia}</h3>
+            
               <tr>
                 <th style={{ width: '50%' }}>Nombre</th>
                 <th style={{ width: '50%' }}>Stock</th>

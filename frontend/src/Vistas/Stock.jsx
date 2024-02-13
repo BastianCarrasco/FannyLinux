@@ -70,6 +70,7 @@ function Stock() {
           <option value="7">Postre</option>
           <option value="8">Otro</option>
           <option value="9">Special</option>
+          <option value="10">Guiso</option>
         </select>
 
         <br></br>
@@ -92,7 +93,7 @@ function Stock() {
                  
                   <td style={{ width: '33%' }}>{item.precio}</td>
                   <td style={{ width: '33%' }}>
-                    {item.tipo !== 1 && item.tipo !== 2 && item.tipo !== 3 && item.tipo !== 4 ? (
+                    {item.tipo !== 1 && item.tipo !== 2 && item.tipo !== 3 && item.tipo !== 4 && item.tipo !== 10 ? (
                       <input
                         style={{ width: '100%', textAlign: 'center' }}
                         type="number"
