@@ -7,24 +7,51 @@ import Cola from './Vistas/Cola';
 import Encargos from './Vistas/Encargos';
 import Stock from './Vistas/Stock';
 import Menu from './Vistas/Menu';
+import JsBarcode from 'jsbarcode';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function Home() {
   const [count, setCount] = useState(0);
 
+  // Función para crear, imprimir y descargar un archivo PDF
+  const createAndPrintPDF = () => {
+    // Crear un nuevo objeto jsPDF
+    const doc = new jsPDF();
+
+    // Definir el contenido de la boleta ficticia
+    const content = `Este es el contenido del archivo PDF. Count: ${count}`;
+
+    // Agregar el texto de la boleta al PDF
+    doc.text(content, 10, 10);
+
+    // Generar el código de barras
+    const barcodeValue = '123456789'; // Valor del código de barras
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, barcodeValue, { format: 'CODE128' });
+    const barcodeImageUrl = canvas.toDataURL('image/png');
+
+    // Cargar la imagen del código de barras en el PDF
+    doc.addImage(barcodeImageUrl, 'PNG', 10, 30, 100, 30);
+
+    // Guardar el archivo PDF
+    doc.save('boleta.pdf');
+
+    // Imprimir el archivo PDF después de guardarlo
+    doc.autoPrint();
+  };
+
   return (
-    <div style={{ width: "100%" }}>
-      <h1>Colaciones Fanny</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
+    <div>
+      <h1>Boleta de Compra Ficticia</h1>
+      <p>Contador: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Incrementar</button>
+      <button onClick={createAndPrintPDF}>Imprimir Boleta</button>
     </div>
   );
 }
+
+
 
 function App() {
   return (
