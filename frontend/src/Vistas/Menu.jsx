@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { obtenerDatosSemana } from '../funciones backend/consultas';
+import { obtenerDatosSemana,actualizarStockSemana, actualizarStockG } from '../funciones backend/consultas';
 import SelecionMenuSemana from '../Modal/Componentes Semana/SelecionMenuSemana';
+
+
 
 function Menu() {
   const [semana, setSemana] = useState([]);
   const [semanaEditable, setSemanaEditable] = useState([]);
-  const [mostrarSolo7, setMostrarSolo7] = useState(false);
+  const [mostrarSolo7, setMostrarSolo7] = useState(true);
   const [diaM,setdia] = useState("");
 
   useEffect(() => {
@@ -22,27 +24,81 @@ function Menu() {
     fetchData();
   }, []);
 
-  const handleStockChange = (event, dia, index) => {
-    const value = event.target.value;
+  // useEffect(() => {
+  //   console.log(semanaEditable.filter(item => item.dia === 'LUNES'));
+  // }, [semanaEditable]);
+  
+  async function llamarActualizarStockG() {
+    try {
+      const resultado = await actualizarStockG();
+      console.log('Resultado de la actualización:', resultado);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error al llamar a actualizarStockG:', error);
+    }
+  }
+
+
+
+  
+
+  const handleStockChange = (event, dia, nombre) => {
+    const value = parseInt(event.target.value); // Convertir el valor a un número
     if (!isNaN(value)) {
       const newSemanaEditable = semanaEditable.map((item) => {
-        if (item.dia === dia && item.numero === index) {
-          return { ...item, stockD: parseInt(value) };
+        if (item.dia === dia && item.nombre === nombre) {
+          return { ...item, stockD: value };
         }
         return item;
       });
       setSemanaEditable(newSemanaEditable); // Actualizar el estado semanaEditable
     }
   };
+  
 
   const handleMostrarSolo7Change = (event) => {
     setMostrarSolo7(event.target.checked);
   };
 
+  const handleActualizarStock = async () => {
+    try {
+      // Objeto para mapear los nombres de los días a sus claves
+      const diasClaves = {
+        LUNES: 1,
+        MARTES: 2,
+        MIÉRCOLES: 3,
+        JUEVES: 4,
+        VIERNES: 5,
+        SÁBADO: 6
+      };
+  
+      // Utilizar Promise.all para esperar la finalización de todas las actualizaciones de stock
+      await Promise.all(semanaEditable.map(async (item) => {
+        // Obtener la clave del día actual
+        const clave = diasClaves[item.dia];
+        // Verificar si la clave existe
+        if (clave !== undefined) {
+          // Ejecutar la actualización de stock
+          await actualizarStockSemana(item.numero, clave, item.stockD);
+        }
+      }));
+
+      llamarActualizarStockG();
+
+  
+    
+    } catch (error) {
+      console.error('Error al actualizar el stock de la semana:', error);
+    }
+  };
+  
+
   return (
     <div className="menu-container">
-      <h2>Menú de la Semana</h2>
-      <SelecionMenuSemana></SelecionMenuSemana>
+     <row className="fila_botones_semana"> <SelecionMenuSemana></SelecionMenuSemana>
+      <button onClick={handleActualizarStock}>Actualizar Stock</button>
+      </row>
+     
       <div>
         <input
           type="checkbox"
@@ -50,6 +106,8 @@ function Menu() {
           onChange={handleMostrarSolo7Change}
         />
         <label>Mostrar solo platillos</label>
+
+     
       </div>
       <div className="tables-container">
         {['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'].map((dia, indexDia) => (
@@ -76,7 +134,7 @@ function Menu() {
                             type="number"
                             value={item.stockD}
                             min="0"
-                            onChange={(event) => handleStockChange(event, dia, index)}
+                            onChange={(event) => handleStockChange(event, item.dia, item.nombre)}
                           />
                         </td>
                       </tr>
@@ -93,7 +151,7 @@ function Menu() {
                             type="number"
                             value={item.stockD}
                             min="0"
-                            onChange={(event) => handleStockChange(event, item.dia, item.numero)}
+                            onChange={(event) => handleStockChange(event, item.dia, item.nombre)}
                           />
                         </td>
                       </tr>

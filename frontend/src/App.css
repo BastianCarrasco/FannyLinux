@@ -168,3 +168,14 @@ nav li:last-child {
   background-color: green; /* Color cuando el botón está presionado */
   margin: 5px; /* Espacio entre botones */
 }
+
+.fila_botones_semana {
+  display: flex;
+  text-align: center;
+  
+ 
+}
+
+.fila_botones_semana > *:not(:last-child) {
+  margin-right: 10px; /* Añade un margen a la derecha para separar los elementos */
+}

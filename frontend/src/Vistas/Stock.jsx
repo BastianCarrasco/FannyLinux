@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AgrandarMenu from '../Modal/AgrandarMenu';
-import { obtenerDatosMenu } from '../funciones backend/consultas';
+import { obtenerDatosMenu, actualizarStockG } from '../funciones backend/consultas';
 import axios from 'axios';
 
 function Stock() {
@@ -9,11 +9,27 @@ function Stock() {
   const [tipoFiltro, setTipoFiltro] = useState('');
   const [hayCambios, setHayCambios] = useState(false); // Estado para indicar si hay cambios
 
-  useEffect(() => {
-    console.log(datosMenuEditable);
-  }, [datosMenuEditable]);
+  // Llamada a la función actualizarStockG
+async function llamarActualizarStockG() {
+  try {
+    const resultado = await actualizarStockG();
+    console.log('Resultado de la actualización:', resultado);
+  } catch (error) {
+    console.error('Error al llamar a actualizarStockG:', error);
+  }
+}
+
+// Llamar a la función
+
+
+
+
+
+
+llamarActualizarStockG();
 
   useEffect(() => {
+   
     const fetchData = async () => {
       try {
         const data = await obtenerDatosMenu();
@@ -47,7 +63,7 @@ function Stock() {
   const handleGuardarCambios = async () => {
     try {
       for (const item of datosMenuEditable) {
-        await axios.put(`http://localhost:5000/actualizar-menu/${item.id}`, { stockG: item.stockG });
+        await axios.put(`http://localhost:5150/actualizar-menu/${item.id}`, { stockG: item.stockG });
       }
       setHayCambios(false); // Resetear el estado indicando que no hay cambios después de guardar
     } catch (error) {

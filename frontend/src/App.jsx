@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Link, Route, Routes, Navigate } from 'react-router-dom';
 
 import './App.css';
+import Sii from './Vistas/Sii';
 import Caja from './Vistas/Caja';
 import Cola from './Vistas/Cola';
 import Encargos from './Vistas/Encargos';
@@ -77,6 +78,9 @@ function App() {
             <li>
               <Link to="/stock" className='botonNav'>Stock</Link>
             </li>
+            <li>
+              <Link to="/sii" className='botonNav'>Sii</Link>
+            </li>
           </ul>
         </nav>
 
@@ -87,6 +91,7 @@ function App() {
           <Route path="/encargos" element={<Encargos />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/stock" element={<Stock />} />
+          <Route path="/sii" element={<Sii />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

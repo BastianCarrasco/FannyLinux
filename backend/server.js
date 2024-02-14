@@ -105,10 +105,88 @@ app.get('/datosSemana', (req, res) => {
 });
 
 
+app.put('/actualizar-semana/:numero/:id_dia', (req, res) => {
+  const { numero, id_dia } = req.params;
+
+  // Verificar si se proporciona stockG en el cuerpo de la solicitud
+  const { id_menu } = req.body;
+  if (!id_menu) {
+    return res.status(400).json({ error: 'El parámetro id_menu es obligatorio' });
+  }
+
+  // Query de actualización
+  const sql = "UPDATE Semana SET id_menu = ? WHERE numero = ? AND id_dia = ?";
+
+  // Ejecutar la consulta en la base de datos utilizando db.query
+  db.query(sql, [id_menu, numero, id_dia], (err, result) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ error: 'Error al actualizar la semana' });
+    } else {
+      console.log('Semana actualizada correctamente');
+      res.status(200).json({ message: 'Semana actualizada correctamente' });
+    }
+  });
+});
+
+app.put('/actualizar-stock/:numero/:id_dia', (req, res) => {
+  const { numero, id_dia } = req.params;
+
+  // Verificar si se proporciona el valor de stockD en el cuerpo de la solicitud
+  const { stockD } = req.body;
+  if (stockD === undefined) {
+    return res.status(400).json({ error: 'El parámetro stockD es obligatorio' });
+  }
+
+  // Query de actualización con parámetros
+  const sql = "UPDATE `Semana` SET `stockD` = ? WHERE `Semana`.`numero` = ? AND `Semana`.`id_dia` = ?";
+
+  // Ejecutar la consulta en la base de datos utilizando db.query con los parámetros
+  db.query(sql, [stockD, numero, id_dia], (err, result) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ error: 'Error al actualizar el stock' });
+    } else {
+      console.log('Stock actualizado correctamente');
+      res.status(200).json({ message: 'Stock actualizado correctamente' });
+    }
+  });
+});
+
+
+app.put('/actualizar-stockG', (req, res) => {
+  // Consulta SQL para actualizar stockG en la tabla Menu con la suma de stockD de la tabla Semana
+  const sql = `
+    UPDATE Menu AS m
+    JOIN (
+        SELECT id_menu, SUM(stockD) AS total_stockD
+        FROM Semana
+        GROUP BY id_menu
+    ) AS s ON m.id = s.id_menu
+    SET m.stockG = s.total_stockD;
+  `;
+
+  // Ejecutar la consulta en la base de datos utilizando db.query
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ error: 'Error al actualizar stockG en la tabla Menu' });
+    } else {
+      console.log('stockG actualizado correctamente en la tabla Menu');
+      res.status(200).json({ message: 'stockG actualizado correctamente en la tabla Menu' });
+    }
+  });
+});
+
+
+
+
+
+
 
 
 // Escuchar en un puerto específico
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5150;
 app.listen(PORT, () => {
   console.log(`Servidor backend escuchando en el puerto ${PORT}`);
 });
