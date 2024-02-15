@@ -10,7 +10,7 @@ export let Precio = parseInt(localStorage.getItem('Precio')) || 0;
 export let Estado = parseInt(localStorage.getItem('Estado')) || 0;
 export let Barra = parseInt(localStorage.getItem('Barra')) || 0;
 export let Cliente = localStorage.getItem('Cliente') || 'Orden';
-export let NumOrden = parseInt(localStorage.getItem('NumOrden')) || 0;
+export let NumOrden = parseInt(localStorage.getItem('NumOrden')) || 1;
 export let ListaPedido = JSON.parse(localStorage.getItem('Pedido')) || [];
 export let ArregloPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) || [];
 
@@ -130,7 +130,6 @@ export function resetearValores() {
     Estado = 0;
     Barra = 0;
     Cliente = 'Orden';
-    NumOrden = 0;
     ListaPedido = [];
     Tipos=[];
 
@@ -144,7 +143,7 @@ export function resetearValores() {
     localStorage.setItem('Estado', Estado);
     localStorage.setItem('Barra', Barra);
     localStorage.setItem('Cliente', Cliente);
-    localStorage.setItem('NumOrden', NumOrden);
+   
     localStorage.setItem('Pedido', JSON.stringify(ListaPedido));
     localStorage.setItem('Tipos', JSON.stringify(Tipos));
 }
@@ -178,7 +177,7 @@ export function cerrarPedido() {
             Barra,
             Cliente,
             NumOrden,
-            ListaPedido
+         
         };
 
         // Agrega el objeto a ArregloPedidos
@@ -209,3 +208,17 @@ export function eliminarPedido(posicion) {
     // Actualiza el localStorage con el nuevo arreglo de pedidos
     localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
 }
+export function calcularTotalPrecios() {
+    // Inicializar la suma total en 0
+    let total = 0;
+  
+    // Iterar sobre cada elemento en ListaPedido
+    for (const item of ListaPedido) {
+      // Sumar el precio de cada elemento al total
+      total += item.Precio;
+    }
+  
+    // Retornar el total calculado
+    return total;
+  }
+  

@@ -1,4 +1,18 @@
 import axios from 'axios';
+import { Cliente, Estado } from '../Vistas/Componentes Caja/partesOrden';
+
+export async function obtenerDatosPedidos() {
+  try {
+    const response = await fetch('http://localhost:5150/obtener-pedidos');
+    if (!response.ok) {
+      throw new Error('Error al obtener datos /obtener-pedidos');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error al obtener datos /obtener-pedidos', error);
+    return [];
+  }
+}
 
 export const actualizarStockG = async () => {
   try {
@@ -75,5 +89,37 @@ export async function obtenerPrecios() {
     return [];
   }
 }
+
+export const insertarVenta = async (datos) => {
+  try {
+    const response = await axios.post('http://localhost:5150/insertar-ventas', datos);
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar la solicitud POST:', error);
+    throw error;
+  }
+};
+
+export const insertarPedido = async (datos) => {
+  const datos_ordenados = {
+    OrdenTxt: datos.TextoOrden,
+    Cantidad: datos.Cantidad,
+    Llaves: datos.Llaves,
+    Comentario: datos.Comentario, // Corregido aquí
+    Precio: datos.Precio,
+    Estado: datos.Estado,
+    Barra: datos.Barra,
+    Cliente: datos.Cliente,
+    NumOrden: datos.NumOrden
+  };
+
+  try {
+    const response = await axios.post('http://localhost:5150/insertar-pedido', datos_ordenados);
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar la solicitud POST:', error);
+    throw error;
+  }
+};
 
 

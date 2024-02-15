@@ -2,12 +2,28 @@ import React, { useEffect, useState } from 'react';
 import Orden_Cantidad_Comentario from './Componentes Caja/Orden_Cantidad_Comentario';
 import Botones from './Componentes Caja/Botones';
 import ListaCaja from './Componentes Caja/listaCaja';
-import { cerrarPedido, Cantidad, TextoOrden, Tipos, cambiarPrecio } from './Componentes Caja/partesOrden';
-import { obtenerPrecios } from '../funciones backend/consultas';
+import { calcularTotalPrecios, cerrarPedido, Cantidad, TextoOrden, Tipos, cambiarPrecio, ArregloPedidos, NumOrden, cambiarNumOrden, resetearArregloPedidos, ListaPedido } from './Componentes Caja/partesOrden';
+import { obtenerPrecios, insertarPedido } from '../funciones backend/consultas';
+import Modal from 'react-modal';
 
+Modal.setAppElement('#root');
 function Caja() {
 
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [precios, setPrecios] = useState([]);
+  const [n, setn] = useState(NumOrden);
+  const [total,setTotal] = useState(0);
+
+  function openModal() {
+    const totalPrecios = calcularTotalPrecios();
+    setTotal(totalPrecios);
+    setModalIsOpen(true);
+  }
+
+  function closeModal() {
+    setModalIsOpen(false);
+  }
 
   useEffect(() => {
     obtenerPrecios()
@@ -104,7 +120,7 @@ function Caja() {
       // Cambiar el precio utilizando la función cambiarPrecio
       cambiarPrecio(nuevoPrecio);
     }
-   
+
 
 
     // Mostrar la cantidad por item por consola
@@ -116,30 +132,74 @@ function Caja() {
     cerrarPedido();
   }
 
+  function insertarPedidoHandler() {
+    // Recorrer cada elemento de ArregloPedidos
+    for (let i = 0; i < ArregloPedidos.length; i++) {
+      const pedido = ArregloPedidos[i];
+      // Insertar el pedido actual
+      insertarPedido(pedido)
+        .then(data => {
+          console.log('Pedido insertado correctamente:', data);
+          // Lógica adicional después de insertar el pedido si es necesario
+        })
+        .catch(error => {
+          console.error('Error al insertar el pedido:', error);
+          // Manejar el error según sea necesario
+        });
+    }
 
+    // Incrementar el número de orden en 1
 
-
-
-
+    // Obtener el nuevo valor de NumOrden y sumarle 1
+    const nuevoNumOrden = NumOrden + 1;
+    // Actualizar el valor de NumOrden en el almacenamiento local
+    localStorage.setItem('NumOrden', nuevoNumOrden.toString());
+    // Actualizar el estado 'n' con el nuevo valor de NumOrden
+    setn(nuevoNumOrden);
+    // Resetear el arreglo de pedidos
+    cambiarNumOrden(nuevoNumOrden);
+    resetearArregloPedidos();
+  }
 
 
   return (
     <div>
       <div className="container_Caja">
         <div className="column_Caja">
-          <Orden_Cantidad_Comentario></Orden_Cantidad_Comentario>
-          <Botones></Botones>
+          <Orden_Cantidad_Comentario />
+          <Botones />
         </div>
-        <div className="column_Caja"><ListaCaja></ListaCaja></div>
+        <div className="column_Caja">
+          NUMERO DE ORDEN: {n}
+          <ListaCaja />
+        </div>
       </div>
       <div className="third_div">
         {/* Contenido del tercer div */}
       </div>
-      <button onClick={precio}>Crear Pedido</button>
+      <button onClick={precio}>Crear Orden</button>
+      <button onClick={openModal}>Crear Pedido</button>
+     
+      <Modal className={voucher}
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="Ejemplo Modal"
+>
+  <div className="modal-headerV">
+    <h2>Voucher</h2>
+  </div>
+  <div className="modal-bodyV">
+    <ListaCaja />
+  </div>
+  <div className="modal-footerV">
+    <button onClick={insertarPedidoHandler}>Generar Voucher</button>
+    <button onClick={closeModal}>Volver</button>
+  </div>
+</Modal>
+
+
     </div>
   );
 }
 
 export default Caja;
-
-

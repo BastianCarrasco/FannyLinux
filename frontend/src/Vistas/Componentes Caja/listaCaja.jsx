@@ -4,10 +4,15 @@ import { FaTrashAlt, FaIceCream, FaBreadSlice, FaMugHot } from 'react-icons/fa';
 
 function ListaCaja() {
   const [pedidos, setPedidos] = useState([]);
+  const [sumaTotalPrecios, setSumaTotalPrecios] = useState(0); // Estado para almacenar la suma total de precios
 
   useEffect(() => {
     const storedPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) || [];
     setPedidos(storedPedidos);
+
+    // Calcular la suma total de precios
+    const total = storedPedidos.reduce((acc, pedido) => acc + pedido.Precio, 0);
+    setSumaTotalPrecios(total);
 
     // Agregar event listener al montar el componente
     document.body.addEventListener('click', handleClick);
@@ -23,6 +28,10 @@ function ListaCaja() {
     // Actualizar pedidos (simplemente volvemos a obtenerlos del localStorage)
     const storedPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) || [];
     setPedidos(storedPedidos);
+
+    // Recalcular la suma total de precios
+    const total = storedPedidos.reduce((acc, pedido) => acc + pedido.Precio, 0);
+    setSumaTotalPrecios(total);
   };
 
   const handleBorrarPedido = (index) => {
@@ -34,7 +43,7 @@ function ListaCaja() {
 
   return (
     <div>
-      <h2>Lista de Pedidos</h2>
+      <h2>Lista de Pedidos - Total: ${sumaTotalPrecios.toFixed(2)}</h2> {/* Mostrar la suma total de precios */}
       <table style={{textAlign:"Left"}} className="full-width-table">
         <thead>
           <tr>
@@ -69,6 +78,7 @@ function ListaCaja() {
 }
 
 export default ListaCaja;
+
 
 
 

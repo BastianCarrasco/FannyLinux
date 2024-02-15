@@ -197,10 +197,44 @@ app.put('/actualizar-stockG', (req, res) => {
   });
 });
 
+app.post('/insertar-ventas', (req, res) => {
+  const { Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta } = req.body;
+  const query = `INSERT INTO Ventas (Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  db.query(query, [Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta], (error, results) => {
+    if (error) {
+      console.error('Error al insertar en la base de datos:', error);
+      res.status(500).json({ error: 'Error al insertar en la base de datos' });
+    } else {
+      res.status(200).json({ message: 'Datos insertados correctamente' });
+    }
+  });
+});
 
 
+app.post('/insertar-pedido', (req, res) => {
+  const { OrdenTxt, Cantidad, Llaves, Comentario, Precio, Estado, Barra, Cliente, NumOrden } = req.body;
+  const query = `INSERT INTO Pedidos (OrdenTxt, Cantidad, Llaves, Comentario, Precio, Estado, Barra, Cliente, NumOrden) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  db.query(query, [OrdenTxt, Cantidad, Llaves, Comentario, Precio, Estado, Barra, Cliente, NumOrden], (error, results) => {
+    if (error) {
+      console.error('Error al insertar en la base de datos:', error);
+      res.status(500).json({ error: 'Error al insertar en la base de datos' });
+    } else {
+      res.status(200).json({ message: 'Datos insertados correctamente' });
+    }
+  });
+});
 
-
+app.get('/obtener-pedidos', (req, res) => {
+  const query = `SELECT Id_pedidos, OrdenTxt, Cantidad, Llaves, Comentario, Precio, Estado, Barra, Cliente, NumOrden FROM Pedidos`;
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al obtener los pedidos:', error);
+      res.status(500).json({ error: 'Error al obtener los pedidos' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
 
 
 
