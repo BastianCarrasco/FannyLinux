@@ -26,7 +26,7 @@ async function llamarActualizarStockG() {
 
 
 
-llamarActualizarStockG();
+
 
   useEffect(() => {
    
