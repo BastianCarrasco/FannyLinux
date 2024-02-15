@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { obtenerDatosSemana, obtenerDatosMenu } from '../../funciones backend/consultas';
-import { agregarAlPedido, imprimirVariables } from './partesOrden';
+import { obtenerDatosSemana, obtenerDatosMenu} from '../../funciones backend/consultas';
+import { agregarAlPedido, imprimirVariables} from './partesOrden';
 
 function Botones() {
     const [datosSemana, setDatosSemana] = useState([]);
     const [datosMenu, setDatosMenu] = useState([]);
     const [pedido, setPedido] = useState([]); // Arreglo para guardar los datos seleccionados
-
+    
     const diasNumeros = {
         LUNES: 1,
         MARTES: 2,

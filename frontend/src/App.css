@@ -197,3 +197,9 @@ nav li:last-child {
 .full-width-table {
   width: 100%; /* Establece el ancho de la tabla al 100% */
 }
+
+.third_div {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  background-color: #ccc; /* Cambia el color de fondo según tus necesidades */
+  /* Otros estilos según tus necesidades */
+}

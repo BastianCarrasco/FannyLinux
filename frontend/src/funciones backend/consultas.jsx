@@ -63,4 +63,17 @@ export async function obtenerDatosSemana() {
   }
 }
 
+export async function obtenerPrecios() {
+  try {
+    const response = await fetch('http://localhost:5150/precio_colaciones');
+    if (!response.ok) {
+      throw new Error('Error al obtener datos de precio_colaciones');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error al obtener datos de precio_colaciones:', error);
+    return [];
+  }
+}
+
 

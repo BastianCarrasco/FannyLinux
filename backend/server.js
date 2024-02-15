@@ -26,6 +26,25 @@ db.connect((err) => {
   console.log('Conexión establecida con la base de datos');
 });
 
+
+
+app.get('/precio_colaciones', (req, res) => {
+  // Query para seleccionar todos los datos del menú
+  const query = "SELECT `id_colaciones`, `tipo_colacion`, `valor` FROM `precios_colaciones`";
+
+  // Ejecutar la consulta
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Error al obtener datos del menú:', error);
+      res.status(500).json({ error: 'Error al obtener datos del menú' });
+    } else {
+      // Enviar los resultados como respuesta
+      res.status(200).json(results);
+    }
+  });
+});
+
+
 app.get('/datosMenu', (req, res) => {
   // Query para seleccionar todos los datos del menú
   const query = 'SELECT * FROM Menu';

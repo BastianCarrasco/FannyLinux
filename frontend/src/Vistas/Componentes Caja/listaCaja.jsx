@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
+import { eliminarPedido } from './partesOrden';
+import { FaTrashAlt, FaIceCream, FaBreadSlice, FaMugHot } from 'react-icons/fa'; // Importa los íconos desde React Icons
 
 function ListaCaja() {
   const [pedidos, setPedidos] = useState([]);
@@ -7,25 +8,42 @@ function ListaCaja() {
   useEffect(() => {
     const storedPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) || [];
     setPedidos(storedPedidos);
-  }, [localStorage.getItem('ArregloPedidos')]); // Agregar localStorage.getItem('ArregloPedidos') como dependencia del efecto
+
+    // Agregar event listener al montar el componente
+    document.body.addEventListener('click', handleClick);
+
+    // Remover event listener al desmontar el componente
+    return () => {
+      document.body.removeEventListener('click', handleClick);
+    };
+  }, []); // El efecto solo se ejecutará una vez al montar el componente
+
+  // Función para manejar el clic en cualquier parte de la página
+  const handleClick = () => {
+    // Actualizar pedidos (simplemente volvemos a obtenerlos del localStorage)
+    const storedPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) || [];
+    setPedidos(storedPedidos);
+  };
+
+  const handleBorrarPedido = (index) => {
+    eliminarPedido(index);
+    const newPedidos = [...pedidos];
+    newPedidos.splice(index, 1);
+    setPedidos(newPedidos);
+  };
 
   return (
     <div>
       <h2>Lista de Pedidos</h2>
-      <table className="full-width-table"> {/* Agrega la clase full-width-table */}
+      <table style={{textAlign:"Left"}} className="full-width-table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Texto de la Orden</th>
-            <th>Cantidad</th>
-            {/* <th>Llaves</th> */}
+            <th>#</th>
             <th>Comentario</th>
             <th>Precio</th>
-            {/* <th>Estado</th> */}
-            {/* <th>Barra</th> */}
-            {/* <th>Cliente</th> */}
-            {/* <th>Número de Orden</th> */}
-            {/* Agrega más encabezados según las propiedades de cada pedido */}
+            <th>Acciones</th> {/* Nueva columna para acciones */}
           </tr>
         </thead>
         <tbody>
@@ -33,15 +51,15 @@ function ListaCaja() {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{pedido.TextoOrden}</td>
-              <td>{pedido.Cantidad}</td>
-              {/* <td>{pedido.Llaves}</td> */}
+              <td>{"x"+pedido.Cantidad}</td>
               <td>{pedido.Comentario}</td>
               <td>{pedido.Precio}</td>
-              {/* <td>{pedido.Estado}</td>
-              <td>{pedido.Barra}</td>
-              <td>{pedido.Cliente}</td>
-              <td>{pedido.NumOrden}</td> */}
-              {/* Agrega más celdas según las propiedades de cada pedido */}
+              <td>
+                <FaTrashAlt onClick={() => handleBorrarPedido(index)} /> {/* Ícono de papelera */}
+                <FaIceCream /> {/* Ícono de helado */}
+                <FaBreadSlice /> {/* Ícono de pan */}
+                <FaMugHot /> {/* Ícono de bebida */}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -51,5 +69,8 @@ function ListaCaja() {
 }
 
 export default ListaCaja;
+
+
+
 
 
