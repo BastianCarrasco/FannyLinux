@@ -13,7 +13,7 @@ function Caja() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [precios, setPrecios] = useState([]);
   const [n, setn] = useState(NumOrden);
-  const [total,setTotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   function openModal() {
     const totalPrecios = calcularTotalPrecios();
@@ -179,23 +179,23 @@ function Caja() {
       </div>
       <button onClick={precio}>Crear Orden</button>
       <button onClick={openModal}>Crear Pedido</button>
-     
-      <Modal className={voucher}
-  isOpen={modalIsOpen}
-  onRequestClose={closeModal}
-  contentLabel="Ejemplo Modal"
->
-  <div className="modal-headerV">
-    <h2>Voucher</h2>
-  </div>
-  <div className="modal-bodyV">
-    <ListaCaja />
-  </div>
-  <div className="modal-footerV">
-    <button onClick={insertarPedidoHandler}>Generar Voucher</button>
-    <button onClick={closeModal}>Volver</button>
-  </div>
-</Modal>
+
+      <Modal 
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Ejemplo Modal"
+      >
+        <div className="modal-headerV">
+          <h2>Voucher</h2>
+        </div>
+        <div className="modal-bodyV">
+          <ListaCaja />
+        </div>
+        <div className="modal-footerV">
+          <button onClick={insertarPedidoHandler}>Generar Voucher</button>
+          <button onClick={closeModal}>Volver</button>
+        </div>
+      </Modal>
 
 
     </div>

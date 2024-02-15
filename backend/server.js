@@ -236,6 +236,24 @@ app.get('/obtener-pedidos', (req, res) => {
   });
 });
 
+app.delete('/eliminar-pedidos-barra', (req, res) => {
+  const { barra } = req.body; // Se asume que el valor de 'barra' se encuentra en el cuerpo de la solicitud
+  
+  // Query SQL para eliminar pedidos con la barra proporcionada
+  const query = 'DELETE FROM Pedidos WHERE Barra = ?';
+
+  // Ejecutar la consulta SQL
+  db.query(query, [barra], (error, results) => {
+    if (error) {
+      console.error('Error al eliminar pedidos en la base de datos:', error);
+      res.status(500).json({ error: 'Error al eliminar pedidos en la base de datos' });
+    } else {
+      res.status(200).json({ message: 'Pedidos eliminados correctamente' });
+    }
+  });
+});
+
+
 
 
 // Escuchar en un puerto específico

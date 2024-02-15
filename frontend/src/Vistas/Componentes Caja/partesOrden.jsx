@@ -8,7 +8,7 @@ export let Llaves = localStorage.getItem('Llaves') || '';
 export let Comentario = localStorage.getItem('Comentario') || '';
 export let Precio = parseInt(localStorage.getItem('Precio')) || 0;
 export let Estado = parseInt(localStorage.getItem('Estado')) || 0;
-export let Barra = parseInt(localStorage.getItem('Barra')) || 0;
+export let Barra = parseInt(localStorage.getItem('Barra')) || 123456789;
 export let Cliente = localStorage.getItem('Cliente') || 'Orden';
 export let NumOrden = parseInt(localStorage.getItem('NumOrden')) || 1;
 export let ListaPedido = JSON.parse(localStorage.getItem('Pedido')) || [];
@@ -83,10 +83,33 @@ export function cambiarEstado(estado) {
 }
 
 // Función para cambiar el valor de Barra y guardarlo en localStorage
-export function cambiarBarra(barra) {
-    Barra = barra;
-    localStorage.setItem('Barra', barra);
+export function cambiarBarra() {
+    const nuevaBarra = generarNumeroUnico(); // Generar un nuevo número de nueve dígitos único
+    Barra = nuevaBarra; // Asignar el nuevo valor a Barra
+    localStorage.setItem('Barra', nuevaBarra); // Guardar el nuevo valor en localStorage
 }
+
+
+// Función para generar un número de nueve dígitos único y no repetido
+function generarNumeroUnico() {
+    let numero = '';
+    const digitosUsados = new Set(); // Conjunto para almacenar los dígitos utilizados
+
+    while (numero.length < 9) {
+        // Generar un dígito aleatorio entre 0 y 9
+        const digito = Math.floor(Math.random() * 10).toString();
+
+        // Asegurarse de que el dígito no se repita
+        if (!digitosUsados.has(digito)) {
+            // Agregar el dígito al número generado y al conjunto de dígitos utilizados
+            numero += digito;
+            digitosUsados.add(digito);
+        }
+    }
+
+    return numero;
+}
+
 
 // Función para cambiar el valor de Cliente y guardarlo en localStorage
 export function cambiarCliente(cliente) {
@@ -116,6 +139,7 @@ export function llaves() {
 // partesOrden.js
 export function resetearArregloPedidos(){
     ArregloPedidos = [];
+    cambiarBarra();
     localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
 }
 
@@ -128,7 +152,7 @@ export function resetearValores() {
     Comentario = '';
     Precio = 0;
     Estado = 0;
-    Barra = 0;
+   
     Cliente = 'Orden';
     ListaPedido = [];
     Tipos=[];
@@ -141,7 +165,7 @@ export function resetearValores() {
     localStorage.setItem('Comentario', Comentario);
     localStorage.setItem('Precio', Precio);
     localStorage.setItem('Estado', Estado);
-    localStorage.setItem('Barra', Barra);
+   
     localStorage.setItem('Cliente', Cliente);
    
     localStorage.setItem('Pedido', JSON.stringify(ListaPedido));
@@ -162,7 +186,6 @@ export function imprimirVariables() {
 }
 
 export function cerrarPedido() {
-
 
     // Verifica si la Cantidad es diferente de cero y el TextoOrden es diferente de 'Orden'
     if (Cantidad !== 0 && TextoOrden !== 'Orden') {
