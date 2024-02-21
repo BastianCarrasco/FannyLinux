@@ -264,3 +264,23 @@ export function calcularTotalPrecios() {
     // Retornar el total calculado
     return total;
   }
+
+  export function borrarUltimoElementoListaPedido() {
+    // Verificar si ListaPedido tiene elementos
+    if (ListaPedido.length > 0) {
+        // Remover el último elemento de ListaPedido
+        ListaPedido.pop();
+        
+        // Actualizar el texto de la orden
+        actualizarTextoOrden();
+        
+        // Guardar ListaPedido actualizada en localStorage
+        localStorage.setItem('Pedido', JSON.stringify(ListaPedido));
+        
+        // Informar al usuario que se ha borrado el último elemento
+        console.log('Se ha eliminado el último elemento de ListaPedido.');
+    } else {
+        // Informar al usuario que ListaPedido está vacía
+        console.log('ListaPedido está vacía. No se puede eliminar ningún elemento.');
+    }
+}

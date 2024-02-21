@@ -3,8 +3,9 @@ import {
   TextoOrden,
   Comentario,
   Cantidad,
-  resetearValores, cambiarComentario, cambiarCantidad, resetearArregloPedidos
+  resetearValores, cambiarComentario, cambiarCantidad, resetearArregloPedidos, borrarUltimoElementoListaPedido
 } from './partesOrden';
+import { FaUndoAlt } from 'react-icons/fa'; // Importa el ícono de flecha hacia atrás desde React Icons
 
 function Orden_Cantidad_Comentario() {
   const [key, setKey] = useState(0);
@@ -50,19 +51,24 @@ function Orden_Cantidad_Comentario() {
     settxt(TextoOrden);
     setCantidad(Cantidad);
     setComentario(Comentario);
-
-
   };
 
   const handleDocumentClick = () => {
     countClick(); // Llama a la función countClick para contar los clics
   };
 
+  const handleBorrarUltimoClick = () => {
+    borrarUltimoElementoListaPedido();
+    setKey(key + 1); // Actualiza el estado key para forzar la actualización del componente
+  };
+
   return (
     <div key={key}>
       <div>
         <label>Orden:</label>
-        <input style={{ width: "100%", marginBottom: "5px" }} type="text" value={txt} readOnly />
+        <input style={{ width: "80%", marginBottom: "5px" }} type="text" value={txt} readOnly />
+        <button style={{ marginLeft: "15px", marginBottom: "5px",  scale:"90%", backgroundColor:"black", color:"white" }} onClick={handleBorrarUltimoClick}><FaUndoAlt /></button> {/* Botón con el ícono de flecha hacia atrás */}
+
       </div>
 
       <div>
@@ -73,7 +79,7 @@ function Orden_Cantidad_Comentario() {
         <input style={{ maxWidth: "10%", marginLeft: "10px" }} type="text" value={cantidadlocal} onChange={handleCantidadChange} />
       </div>
 
-      <button onClick={handleResetClick}>RESET</button>
+      {/* <button className='cancelar' style={{scale:"80%", fontSize:"18px"}}  onClick={handleResetClick}>CANCELAR</button> */}
 
       {/* Mostrar la representación JSON de TextoOrden */}
       {/* <p>Clicks en cualquier parte: {clickCount}</p> */}
@@ -82,6 +88,7 @@ function Orden_Cantidad_Comentario() {
 }
 
 export default Orden_Cantidad_Comentario;
+
 
 
 

@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { obtenerDatosSemana, obtenerDatosMenu } from '../../funciones backend/consultas';
-import { agregarAlPedido, imprimirVariables } from './partesOrden';
+import { agregarAlPedido, imprimirVariables, ListaPedido } from './partesOrden';
 import { FaRegFile, FaIceCream, FaBreadSlice, FaMugHot, FaStar } from 'react-icons/fa'; // Importa los íconos desde React Icons
 import ModalEmpanadas from './modales caja/ModalEmpanadas';
 import ModalPostres from './modales caja/ModalPostres';
-import ModalBebidas from './modales caja/ModalBebidas';
+
 import ModalSpecial from './modales caja/ModalSpecial';
 import ModalOtro from './modales caja/ModalOtro';
+import Modal from 'react-modal';
 
 function Botones() {
     const [datosSemana, setDatosSemana] = useState([]);
     const [datosMenu, setDatosMenu] = useState([]);
     const [pedido, setPedido] = useState([]); // Arreglo para guardar los datos seleccionados
     const [modalAbierto, setModalAbierto] = useState(false); // Estado del modal de las Empanadas
-    const diasNumeros = {
-        LUNES: 1,
-        MARTES: 2,
-        MIÉRCOLES: 3,
-        JUEVES: 4,
-        VIERNES: 5,
-        SÁBADO: 6,
-        DOMINGO: 7
+
+
+
+    const abrirModalBebidas = () => {
+        setModalAbierto(true);
     };
 
+    // Función para cerrar el modal de bebidas
+    const cerrarModalBebidas = () => {
+        setModalAbierto(false);
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -63,6 +65,7 @@ function Botones() {
     const datosDiaActual = datosSemana.filter(item => item.dia === diaActual).slice(0, 9); // Mostrar solo los primeros 9 elementos
     const datosPapas = datosSemana.filter(item => item.dia === diaActual).slice(9, 11); // Mostrar solo los primeros 9 elementos
     const datosEnsalada = datosMenu.filter(item => [36, 33, 24].includes(item.id));
+    const datosBebidas = datosMenu.filter(item => [5].includes(item.tipo));
 
     // Función para manejar el evento onClick del botón
     const handleClick = (item) => {
@@ -94,13 +97,75 @@ function Botones() {
                         {item.nombre}<br />{item.stockG}
                     </button>
                 ))}
-                <ModalBebidas />
+                <button onClick={abrirModalBebidas} className="boton" style={{ backgroundColor: "lightblue", paddingTop: '3px' }}>
+                    Bebidas
+                </button>
+
+                {/* Modal de bebidas */}
+                <Modal
+                    isOpen={modalAbierto}
+                    onRequestClose={cerrarModalBebidas}
+                    style={{
+                        overlay: {
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                        },
+                        content: {
+                            backgroundColor: 'white',
+                            padding: '20px',
+                            borderRadius: '5px',
+                            width: '150%', // Ocupa todo el ancho
+                            height: '150%', // Ocupa todo el alto
+                            maxWidth: '80%',
+                            maxHeight: '80%',
+                            overflow: 'auto'
+                        }
+                    }}
+                >
+            <div className="modal-body">
+    {/* Botones para bebidas */}
+    <div>
+        <h3>Bebidas</h3>
+        {datosBebidas.filter(item => item.nombre.includes(" B")).map(item => (
+            <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ paddingTop: '3px' }}>
+                {item.nombre}<br />{item.stockG}
+            </button>
+        ))}
+    </div>
+    {/* Botones para latas */}
+    <div>
+        <h3>Latas</h3>
+        {datosBebidas.filter(item => item.nombre.includes(" L")).map(item => (
+            <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ paddingTop: '3px' }}>
+                {item.nombre}<br />{item.stockG}
+            </button>
+        ))}
+    </div>
+    {/* Botones para otros */}
+    <div>
+        <h3>Otros</h3>
+        {datosBebidas.filter(item => !item.nombre.includes(" B") && !item.nombre.includes(" L")).map(item => (
+            <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ paddingTop: '3px' }}>
+                {item.nombre}<br />{item.stockG}
+            </button>
+        ))}
+    </div>
+    
+</div>
+
+                </Modal>
                 <ModalEmpanadas />
                 <ModalPostres />
                 <ModalSpecial />
                 <ModalOtro />
                 {/* Botones de los modales */}
-            
+
+
+
             </div>
         </div>
     );

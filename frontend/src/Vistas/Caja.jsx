@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Orden_Cantidad_Comentario from './Componentes Caja/Orden_Cantidad_Comentario';
 import Botones from './Componentes Caja/Botones';
 import ListaCaja from './Componentes Caja/listaCaja';
-import { calcularTotalPrecios, cerrarPedido, Cantidad, TextoOrden, Tipos, cambiarPrecio, ArregloPedidos, NumOrden, cambiarNumOrden, resetearArregloPedidos, ListaPedido } from './Componentes Caja/partesOrden';
+import {resetearValores,calcularTotalPrecios, cerrarPedido, Cantidad, TextoOrden, Tipos, cambiarPrecio, ArregloPedidos, NumOrden, cambiarNumOrden, resetearArregloPedidos, ListaPedido } from './Componentes Caja/partesOrden';
 import { obtenerPrecios, insertarPedido } from '../funciones backend/consultas';
 import Modal from 'react-modal';
 
@@ -14,6 +14,12 @@ function Caja() {
   const [precios, setPrecios] = useState([]);
   const [n, setn] = useState(NumOrden);
   const [total, setTotal] = useState(0);
+
+  const handleResetClick = () => {
+    resetearValores();
+    resetearArregloPedidos();
+
+  };
 
   function openModal() {
     const totalPrecios = calcularTotalPrecios();
@@ -46,7 +52,7 @@ function Caja() {
 
   function contarCantidadPorTipo(tipo) {
     return ListaPedido.filter(item => item.tipo === tipo).length;
-}
+  }
 
 
   function precio() {
@@ -77,8 +83,8 @@ function Caja() {
       cambiarPrecio(resultado);
     }
     //Proteína + acompañamiento + postre (jalea o flan) + pan
-        // Proteína + acompañamiento + pebre + pan
-    if (Proteina && Acompanna && (Flan || Pebre || Jalea) && LargoPedido === 3 ) {
+    // Proteína + acompañamiento + pebre + pan
+    if (Proteina && Acompanna && (Flan || Pebre || Jalea) && LargoPedido === 3) {
       resultado = Cantidad * precios[0].valor;
       cambiarPrecio(resultado);
     }
@@ -99,37 +105,37 @@ function Caja() {
     // Guisado + postre (jalea o flan) + pan
     //     Guisado + pebre + pan
 
-    if (Guiso && (Flan || Pebre || Jalea) && LargoPedido === 2 ) {
+    if (Guiso && (Flan || Pebre || Jalea) && LargoPedido === 2) {
       resultado = Cantidad * precios[0].valor;
       cambiarPrecio(resultado);
     }
 
     // Proteína + papa frita chica + ensalada chica + pan
 
-    if (Proteina && EnsaladaC && PapaC && LargoPedido === 3 ) {
+    if (Proteina && EnsaladaC && PapaC && LargoPedido === 3) {
       resultado = Cantidad * precios[1].valor;
       cambiarPrecio(resultado);
     }
     // Proteína + acompañamiento + papa frita + ensalada chica + pan
-    if (Proteina && EnsaladaC && PapaC && Acompanna &&LargoPedido === 4 ) {
+    if (Proteina && EnsaladaC && PapaC && Acompanna && LargoPedido === 4) {
       resultado = Cantidad * precios[1].valor;
       cambiarPrecio(resultado);
     }
 
     // Proteína + papa frita chica + postre (jalea o flan) + pan
     // Proteína + papa frita chica +pebre + pan
-    if (Proteina && PapaC && (Flan || Pebre || Jalea) &&LargoPedido === 3 ) {
+    if (Proteina && PapaC && (Flan || Pebre || Jalea) && LargoPedido === 3) {
       resultado = Cantidad * precios[1].valor;
       cambiarPrecio(resultado);
     }
     // Proteína + acompañamiento + papa frita chica +postre (jalea o flan) + pan
-    
-    if (Proteina && PapaC && (Flan || Pebre || Jalea) && Acompanna && LargoPedido === 4 ) {
+
+    if (Proteina && PapaC && (Flan || Pebre || Jalea) && Acompanna && LargoPedido === 4) {
       resultado = Cantidad * precios[1].valor;
       cambiarPrecio(resultado);
     }
     // Guiso solo / proteína + acompañamiento = $3,500
-    if ( (Guiso && LargoPedido===1) || (Proteina && Acompanna && LargoPedido===2)){
+    if ((Guiso && LargoPedido === 1) || (Proteina && Acompanna && LargoPedido === 2)) {
       resultado = Cantidad * precios[2].valor;
       cambiarPrecio(resultado);
     }
@@ -141,28 +147,7 @@ function Caja() {
       const precioUnitario = dato.precio;
       resultado = Cantidad * precioUnitario;
       cambiarPrecio(resultado);
-    
-  }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // cambiarPrecio(algo);
-    // Mostrar la cantidad por item por consola
-
+    }
     cerrarPedido();
   }
 
@@ -213,7 +198,9 @@ function Caja() {
       </div>
       <button onClick={precio}>Crear Orden</button>
       <button onClick={openModal}>Crear Pedido</button>
-
+      <button onClick={precio}>Crear Orden</button>
+      <button className='cancelar' style={{scale:"80%", fontSize:"18px"}}  onClick={handleResetClick}>CANCELAR</button>
+     
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
