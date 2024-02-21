@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { obtenerDatosSemana, obtenerDatosMenu} from '../../funciones backend/consultas';
-import { agregarAlPedido, imprimirVariables} from './partesOrden';
+import { obtenerDatosSemana, obtenerDatosMenu } from '../../funciones backend/consultas';
+import { agregarAlPedido, imprimirVariables } from './partesOrden';
+import { FaRegFile, FaIceCream, FaBreadSlice, FaMugHot, FaStar } from 'react-icons/fa'; // Importa los íconos desde React Icons
+import ModalEmpanadas from './modales caja/ModalEmpanadas';
+import ModalPostres from './modales caja/ModalPostres';
+import ModalBebidas from './modales caja/ModalBebidas';
+import ModalSpecial from './modales caja/ModalSpecial';
+import ModalOtro from './modales caja/ModalOtro';
 
 function Botones() {
     const [datosSemana, setDatosSemana] = useState([]);
     const [datosMenu, setDatosMenu] = useState([]);
     const [pedido, setPedido] = useState([]); // Arreglo para guardar los datos seleccionados
-    
+    const [modalAbierto, setModalAbierto] = useState(false); // Estado del modal de las Empanadas
     const diasNumeros = {
         LUNES: 1,
         MARTES: 2,
@@ -70,34 +76,34 @@ function Botones() {
 
     return (
         <div style={{ textAlign: "left" }}>
-            <div className="botones-container-caja">
+            <div className="botones-container-caja" style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {datosDiaActual.map(item => (
                     <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ paddingTop: '3px' }}>
-                        {item.nombre}<br></br>{item.stockD}
+                        {item.nombre}<br />{item.stockD}
                     </button>
                 ))}
 
                 {datosPapas.map(item => (
-                    <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ backgroundColor: "orange",paddingTop: '3px' }}>
-                        {item.nombre}<br></br>{item.stockD}
+                    <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ backgroundColor: "orange", paddingTop: '3px' }}>
+                        {item.nombre}<br />{item.stockD}
                     </button>
                 ))}
 
                 {datosEnsalada.map(item => (
-                    <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ backgroundColor: "lightgreen",paddingTop: '3px' }}>
-                        {item.nombre}<br></br>{item.stockG}
+                    <button key={item.id} onClick={() => handleClick(item)} className="boton" style={{ backgroundColor: "lightgreen", paddingTop: '3px' }}>
+                        {item.nombre}<br />{item.stockG}
                     </button>
                 ))}
-
+                <ModalBebidas />
+                <ModalEmpanadas />
+                <ModalPostres />
+                <ModalSpecial />
+                <ModalOtro />
+                {/* Botones de los modales */}
+            
             </div>
         </div>
     );
 }
 
 export default Botones;
-
-
-
-
-
-

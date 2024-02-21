@@ -16,6 +16,7 @@ export let ArregloPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) |
 
 export let Tipos = JSON.parse(localStorage.getItem('Tipos')) || [];
 
+
 // Función para agregar un nuevo elemento al arreglo Pedido y guardarlo en localStorage
 export function agregarAlPedido(item) {
     ListaPedido.push(item);
@@ -32,18 +33,37 @@ export function agregarTipo(tipo) {
 }
 
 
+
+
 export function actualizarTextoOrden() {
     TextoOrden = ""; // Aquí estás actualizando la variable global TextoOrden
+    let hayElementoDuplicado = false;
+
+    const tipos2 = ListaPedido.filter(item => item.tipo === 2);
+            if (tipos2.length > 1) {
+                if(tipos2[0].nombre===tipos2[1].nombre){
+                    hayElementoDuplicado = true;
+                }
+
+            }
 
     if (ListaPedido.length > 0) {
         // Verificar si el primer elemento es tipo 1 o 10
         const primerElemento = ListaPedido[0];
+
         if (primerElemento.tipo === 1 || primerElemento.tipo === 10) {
             TextoOrden = primerElemento.nombre;
             for (let i = 1; i < ListaPedido.length; i++) {
                 if (i === 1) {
+
+                    if (!hayElementoDuplicado){
                     TextoOrden += ' c/n ';
-                } else {
+                }else{
+                    TextoOrden += ' c/n Grande ';
+                    i=i+1;
+                }
+                }
+                else {
                     TextoOrden += ' + ';
                 }
                 TextoOrden += ListaPedido[i].nombre;
@@ -52,7 +72,7 @@ export function actualizarTextoOrden() {
             TextoOrden = ListaPedido.map(item => item.nombre).join(' + ');
         }
     }
-   
+
     localStorage.setItem('TextoOrden', TextoOrden); // Guardar TextoOrden en localStorage
 }
 
@@ -152,7 +172,7 @@ export function resetearValores() {
     Comentario = '';
     Precio = 0;
     Estado = 0;
-   
+
     Cliente = 'Orden';
     ListaPedido = [];
     Tipos=[];
@@ -160,29 +180,29 @@ export function resetearValores() {
     // Actualizar los valores en el almacenamiento local
     localStorage.setItem('TextoOrden', TextoOrden);
     localStorage.setItem('Cantidad', Cantidad);
-    
+
     localStorage.setItem('Llaves', Llaves);
     localStorage.setItem('Comentario', Comentario);
     localStorage.setItem('Precio', Precio);
     localStorage.setItem('Estado', Estado);
-   
+
     localStorage.setItem('Cliente', Cliente);
-   
+
     localStorage.setItem('Pedido', JSON.stringify(ListaPedido));
     localStorage.setItem('Tipos', JSON.stringify(Tipos));
 }
 
 export function imprimirVariables() {
-    console.log("TextoOrden:", TextoOrden);
-    console.log("Cantidad:", Cantidad);
-    console.log("Llaves:", Llaves);
-    console.log("Comentario:", Comentario);
-    console.log("Precio:", Precio);
-    console.log("Estado:", Estado);
-    console.log("Barra:", Barra);
-    console.log("Cliente:", Cliente);
-    console.log("NumOrden:", NumOrden);
-    console.log("ListaPedido:", ListaPedido);
+    // console.log("TextoOrden:", TextoOrden);
+    // console.log("Cantidad:", Cantidad);
+    // console.log("Llaves:", Llaves);
+    // console.log("Comentario:", Comentario);
+    // console.log("Precio:", Precio);
+    // console.log("Estado:", Estado);
+    // console.log("Barra:", Barra);
+    // console.log("Cliente:", Cliente);
+    // console.log("NumOrden:", NumOrden);
+    // console.log("ListaPedido:", ListaPedido);
 }
 
 export function cerrarPedido() {
@@ -200,7 +220,7 @@ export function cerrarPedido() {
             Barra,
             Cliente,
             NumOrden,
-         
+
         };
 
         // Agrega el objeto a ArregloPedidos
@@ -234,14 +254,13 @@ export function eliminarPedido(posicion) {
 export function calcularTotalPrecios() {
     // Inicializar la suma total en 0
     let total = 0;
-  
+
     // Iterar sobre cada elemento en ListaPedido
     for (const item of ListaPedido) {
       // Sumar el precio de cada elemento al total
       total += item.Precio;
     }
-  
+
     // Retornar el total calculado
     return total;
   }
-  

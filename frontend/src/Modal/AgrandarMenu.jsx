@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Popup from './PopUp';
+
 Modal.setAppElement('#root');
 function AgrandarMenu() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -12,7 +12,7 @@ function AgrandarMenu() {
   const [stockG, setStockG] = useState(0);
   const [enviado, setEnviado] = useState(false); // Nuevo estado para indicar si se ha enviado el menú
   const [eliminado, setEliminado] = useState(false); // Nuevo estado para indicar si se ha eliminado el menú
-  const [showPopup, setShowPopup] = useState(false); // Estado para controlar la visibilidad del popup
+
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -34,10 +34,7 @@ function AgrandarMenu() {
     e.preventDefault();
 
     // Verificar si el nombre y el precio están presentes
-    if (nombre === '' || precio === 0) {
-      setShowPopup(true); // Mostrar el popup de error
-      return;
-    }
+   
 
     try {
       await axios.post('http://localhost:5000/insertar-menu', {
@@ -54,10 +51,7 @@ function AgrandarMenu() {
 
 
   const handleDelete = async () => {
-    if (!nombre) {
-      setShowPopup(true); // Mostrar el popup de error
-      return;
-    }
+ 
 
     try {
       await axios.delete('http://localhost:5000/quitar-menu', {
@@ -140,7 +134,7 @@ function AgrandarMenu() {
           )}
           <button type="submit" onClick={handleSubmit}>Enviar</button>
           <button onClick={handleDelete}>Eliminar</button>
-          {showPopup && <Popup message={eliminado ? 'Falta nombre' : 'Debe ingresar un nombre y un precio'} />}
+        
         </div>
         <div className="modal-footer">
           <button className='cancelar' onClick={closeModal}>Cerrar Modal</button>

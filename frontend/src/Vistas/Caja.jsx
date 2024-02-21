@@ -37,98 +37,132 @@ function Caja() {
       });
   }, []);
 
+  function buscarPorId(id) {
+    return ListaPedido.some(item => item.id === id);
+  }
+  function buscarPorTipo(tipo) {
+    return ListaPedido.some(item => item.tipo === tipo);
+  }
+
+  function contarCantidadPorTipo(tipo) {
+    return ListaPedido.filter(item => item.tipo === tipo).length;
+}
+
+
   function precio() {
-    // Mapear los nombres a sus respectivos contadores
-    const nombrePorItem = {
-      Proteina: 0,
-      Acompaña: 0,
-      Papas: 0,
-      Empanadas: 0,
-      Bebidas: 0,
-      Ensalada: 0,
-      Postre: 0,
-      Otro: 0,
-      Special: 0,
-      Guiso: 0
-    };
 
-    // Incrementar el contador correspondiente según los datos en Tipos
-    Tipos.forEach(item => {
-      switch (item) {
-        case 1:
-          nombrePorItem['Proteina']++;
-          break;
-        case 2:
-          nombrePorItem['Acompaña']++;
-          break;
-        case 3:
-          nombrePorItem['Papas']++;
-          break;
-        case 4:
-          nombrePorItem['Empanadas']++;
-          break;
-        case 5:
-          nombrePorItem['Bebidas']++;
-          break;
-        case 6:
-          nombrePorItem['Ensalada']++;
-          break;
-        case 7:
-          nombrePorItem['Postre']++;
-          break;
-        case 8:
-          nombrePorItem['Otro']++;
-          break;
-        case 9:
-          nombrePorItem['Special']++;
-          break;
-        case 10:
-          nombrePorItem['Guiso']++;
-          break;
-        default:
-          break;
-      }
-    });
+    const CantidadAcompanna = contarCantidadPorTipo(2);
 
-    // Verificar si el contador de "Acompaña" es igual a 1 y el contador de "Guiso" es igual a 10
-    if (nombrePorItem['Acompaña'] === 1 && nombrePorItem['Guiso'] === 1 && nombrePorItem['Proteina'] === 0 && nombrePorItem['Papas'] === 0 && nombrePorItem['Empanadas'] === 0 && nombrePorItem['Bebidas'] === 0 && nombrePorItem['Ensalada'] === 0 && nombrePorItem['Postre'] === 0 && nombrePorItem['Otro'] === 0 && nombrePorItem['Special'] === 0) {
-      // Convertir precios[2].valor y Cantidad a enteros
-      const precioValor = parseInt(precios[2].valor);
-      const cantidad = parseInt(Cantidad);
-      // Calcular el nuevo precio
-      const nuevoPrecio = precioValor * cantidad;
-      // Cambiar el precio utilizando la función cambiarPrecio
-      cambiarPrecio(nuevoPrecio);
+    const EnsaladaG = buscarPorId(36);
+    const Proteina = buscarPorTipo(1);
+    const Guiso = buscarPorTipo(10);
+    const Acompanna = buscarPorTipo(2);
+    const EnsaladaC = buscarPorId(24);
+    const PapaC = buscarPorId(31);
+    const Jalea = buscarPorId(42);
+    const Flan = buscarPorId(66);
+    const Pebre = buscarPorId(74);
+    const LargoPedido = ListaPedido.length;
+    let resultado = 0;
+
+
+    // Proteína + acompañamiento + ensalada chica + pan
+    if (EnsaladaC && Acompanna && Proteina && LargoPedido === 3) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
+    }
+    // Proteína + ensalada grande + pan
+    if (EnsaladaG && Proteina && LargoPedido === 2) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
+    }
+    //Proteína + acompañamiento + postre (jalea o flan) + pan
+        // Proteína + acompañamiento + pebre + pan
+    if (Proteina && Acompanna && (Flan || Pebre || Jalea) && LargoPedido === 3 ) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
     }
 
-    if (nombrePorItem['Acompaña'] === 0 && nombrePorItem['Guiso'] === 1 && nombrePorItem['Proteina'] === 0 && nombrePorItem['Papas'] === 0 && nombrePorItem['Empanadas'] === 0 && nombrePorItem['Bebidas'] === 0 && nombrePorItem['Ensalada'] === 0 && nombrePorItem['Postre'] === 0 && nombrePorItem['Otro'] === 0 && nombrePorItem['Special'] === 0) {
-      // Convertir precios[2].valor y Cantidad a enteros
-      const precioValor = parseInt(precios[2].valor);
-      const cantidad = parseInt(Cantidad);
-      // Calcular el nuevo precio
-      const nuevoPrecio = precioValor * cantidad;
-      // Cambiar el precio utilizando la función cambiarPrecio
-      cambiarPrecio(nuevoPrecio);
+    // Proteína + 2 acompañamientos + postre (jalea o flan) + pan
+    //     Proteína + 2 acompañamientos + pebre + pan
+
+    if (Proteina && CantidadAcompanna === 2 && (Flan || Pebre || Jalea) && LargoPedido === 4) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
+    }
+    // Proteína + 2 acompañamientos + ensalada chica + pan
+    if (Proteina && CantidadAcompanna === 2 && EnsaladaC && LargoPedido === 4) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
     }
 
-    if (nombrePorItem['Acompaña'] === 1 && nombrePorItem['Guiso'] === 0 && nombrePorItem['Proteina'] === 1 && nombrePorItem['Papas'] === 0 && nombrePorItem['Empanadas'] === 0 && nombrePorItem['Bebidas'] === 0 && nombrePorItem['Ensalada'] === 1 && nombrePorItem['Postre'] === 0 && nombrePorItem['Otro'] === 0 && nombrePorItem['Special'] === 0) {
-      // Convertir precios[2].valor y Cantidad a enteros
-      const precioValor = parseInt(precios[0].valor);
-      const cantidad = parseInt(Cantidad);
-      // Calcular el nuevo precio
-      const nuevoPrecio = precioValor * cantidad;
-      // Cambiar el precio utilizando la función cambiarPrecio
-      cambiarPrecio(nuevoPrecio);
+    // Guisado + postre (jalea o flan) + pan
+    //     Guisado + pebre + pan
+
+    if (Guiso && (Flan || Pebre || Jalea) && LargoPedido === 2 ) {
+      resultado = Cantidad * precios[0].valor;
+      cambiarPrecio(resultado);
     }
 
+    // Proteína + papa frita chica + ensalada chica + pan
+
+    if (Proteina && EnsaladaC && PapaC && LargoPedido === 3 ) {
+      resultado = Cantidad * precios[1].valor;
+      cambiarPrecio(resultado);
+    }
+    // Proteína + acompañamiento + papa frita + ensalada chica + pan
+    if (Proteina && EnsaladaC && PapaC && Acompanna &&LargoPedido === 4 ) {
+      resultado = Cantidad * precios[1].valor;
+      cambiarPrecio(resultado);
+    }
+
+    // Proteína + papa frita chica + postre (jalea o flan) + pan
+    // Proteína + papa frita chica +pebre + pan
+    if (Proteina && PapaC && (Flan || Pebre || Jalea) &&LargoPedido === 3 ) {
+      resultado = Cantidad * precios[1].valor;
+      cambiarPrecio(resultado);
+    }
+    // Proteína + acompañamiento + papa frita chica +postre (jalea o flan) + pan
+    
+    if (Proteina && PapaC && (Flan || Pebre || Jalea) && Acompanna && LargoPedido === 4 ) {
+      resultado = Cantidad * precios[1].valor;
+      cambiarPrecio(resultado);
+    }
+    // Guiso solo / proteína + acompañamiento = $3,500
+    if ( (Guiso && LargoPedido===1) || (Proteina && Acompanna && LargoPedido===2)){
+      resultado = Cantidad * precios[2].valor;
+      cambiarPrecio(resultado);
+    }
+
+    // INDIVIDUALES
+
+    if (LargoPedido === 1) {
+      const dato = ListaPedido[0];
+      const precioUnitario = dato.precio;
+      resultado = Cantidad * precioUnitario;
+      cambiarPrecio(resultado);
+    
+  }
+  
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // cambiarPrecio(algo);
     // Mostrar la cantidad por item por consola
-    console.log('Cantidad por item en Tipos:', nombrePorItem);
-    console.log('Precios:', precios);
-    console.log(Cantidad + "PRECIO");
 
-    // Llamar a la función cerrarPedido
     cerrarPedido();
   }
 
@@ -180,7 +214,7 @@ function Caja() {
       <button onClick={precio}>Crear Orden</button>
       <button onClick={openModal}>Crear Pedido</button>
 
-      <Modal 
+      <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Ejemplo Modal"
