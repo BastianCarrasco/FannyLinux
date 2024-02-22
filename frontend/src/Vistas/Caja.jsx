@@ -11,9 +11,13 @@ import {resetearValores,
   NumOrden, 
   cambiarNumOrden, 
   resetearArregloPedidos, 
-  ListaPedido} from './Componentes Caja/partesOrden';
+  ListaPedido,
+  Barra} from './Componentes Caja/partesOrden';
 import { obtenerPrecios, insertarPedido, insertarEncargo } from '../funciones backend/consultas';
 import Modal from 'react-modal';
+import JsBarcode from 'jsbarcode';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 Modal.setAppElement('#root');
 function Caja() {
@@ -26,6 +30,78 @@ function Caja() {
   const [total, setTotal] = useState(0);
   const [nuevoCliente, setNuevoCliente] = useState('');
   const [cambiarEstado,setcambiarEstado] = useState(0);
+
+  const createAndPrintPDF = (ArregloPedidos, Barra) => {
+    // Crear un nuevo objeto jsPDF
+    const doc = new jsPDF({
+      format: [80, 200], // Anchura y altura en milímetros
+    });
+
+    // Generar el código de barras
+    const barcodeValue = Barra; // Valor del código de barras
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, barcodeValue, { format: 'CODE128' });
+    const barcodeImageUrl = canvas.toDataURL('image/png');
+
+    // Cargar la imagen del código de barras en el PDF
+    doc.addImage(barcodeImageUrl, 'PNG', 10, 10, 60, 20); // Ajustar el tamaño del código de barras para que quepa en 80mm
+
+    // Definir el tamaño de fuente para el número de orden
+    const fontSizeNumOrden = 16;
+    doc.setFontSize(fontSizeNumOrden);
+
+    // Definir el tamaño de fuente para el resto del contenido
+    const fontSizeResto = 9;
+    doc.setFontSize(fontSizeResto);
+
+    // Definir el contenido del PDF
+    let content = 'Datos de los pedidos:\n\n';
+    let previousNumOrden = null;
+    let totalPrice = 0;
+
+    // Agregar cada elemento del arreglo al contenido del PDF
+    ArregloPedidos.forEach((pedido, index) => {
+        // Verificar si el número de orden es diferente al pedido anterior
+        if (pedido.NumOrden !== previousNumOrden) {
+            doc.setFontSize(fontSizeNumOrden); // Establecer el tamaño de fuente para el número de orden
+            content += `Número de Orden: ${pedido.NumOrden}\n`;
+            previousNumOrden = pedido.NumOrden;
+        }
+
+        // Establecer el tamaño de fuente para el resto del contenido
+        doc.setFontSize(fontSizeResto);
+
+        content += `Orden: ${pedido.TextoOrden}\nCantidad: ${pedido.Cantidad}\nComentario: ${pedido.Comentario}\nPrecio: ${pedido.Precio}\n`;
+        
+        // Sumar el precio al total
+        totalPrice += parseFloat(pedido.Precio);
+     
+        content += '\n'; // Agregar una línea en blanco entre cada pedido
+    });
+
+    // Agregar el total al contenido del PDF
+    content += `TOTAL: ${totalPrice.toFixed(2)}\n`;
+
+    // Dividir el contenido en líneas que quepan en 80mm de ancho
+    const lines = doc.splitTextToSize(content, 80);
+
+    // Agregar las líneas al PDF
+    doc.text(lines, 10, 40);
+
+    // Guardar el archivo PDF
+    doc.save('boleta.pdf');
+
+    // Imprimir el archivo PDF después de guardarlo
+    doc.autoPrint();
+};
+
+
+
+
+
+
+
+
 
   const handleNuevoClienteChange = (e) => {
     setNuevoCliente(e.target.value);
@@ -215,7 +291,7 @@ function Caja() {
     }
 
 
-
+    createAndPrintPDF(ArregloPedidos,Barra);
     // Incrementar el número de orden en 1
 
     // Obtener el nuevo valor de NumOrden y sumarle 1
@@ -245,10 +321,16 @@ function Caja() {
       <div className="third_div">
         {/* Contenido del tercer div */}
       </div>
-      <button onClick={precio}>Crear Orden</button>
-      <button onClick={openModal}>Crear Pedido</button>
-      <button onClick={openModalEncargo}>Crear Encargo </button>
-      <button className='cancelar' style={{scale:"80%", fontSize:"18px"}}  onClick={handleResetClick}>CANCELAR</button>
+      <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+  <div>
+    <button onClick={precio}>Crear Orden</button>
+    <button onClick={openModal}>Crear Pedido</button>
+    <button onClick={openModalEncargo}>Crear Encargo</button>
+  </div>
+  <button className='cancelar' style={{ scale: '80%', fontSize: '18px' }} onClick={handleResetClick}>CANCELAR PEDIDO</button>
+</div>
+
+
      
       <Modal
         isOpen={modalIsOpen}

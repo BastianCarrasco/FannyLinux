@@ -72,7 +72,13 @@ function Cola() {
     setInputValue(e.target.value);
   };
 
- 
+// Función para determinar si un texto contiene alguna de las palabras específicas
+const contienePalabraEspecifica = (texto, palabras) => {
+  return palabras.some(palabra => texto.toLowerCase().includes(palabra.toLowerCase()));
+};
+
+
+  
 
   return (
     <div>
@@ -104,7 +110,15 @@ function Cola() {
   {pedidos.filter(pedido => pedido.Estado === 0).map((pedido, index) => (
     <tr key={index}>
       <td>{pedido.Id_pedidos}</td>
-      <td>{pedido.OrdenTxt}</td>
+      <td>
+  {/* Dividir la orden en fragmentos y aplicar estilos si contiene alguna de las palabras específicas */}
+  {pedido.OrdenTxt.split(' ').map((fragmento, i) => (
+    contienePalabraEspecifica(fragmento, ['PapasFritasC', 'PapasFritasG', 'QuesCamFrita', 'Sopaipilla', 'Quesofrita','PesFrito']) ? 
+    <span key={i} style={{ color: 'red' }}>{fragmento} </span> : 
+    <span key={i}>{fragmento} </span>
+  ))}
+</td>
+
       <td>{pedido.Cantidad}</td>
       <td>{pedido.Llaves}</td>
       <td>
@@ -131,5 +145,6 @@ function Cola() {
 }
 
 export default Cola;
+
 
 
