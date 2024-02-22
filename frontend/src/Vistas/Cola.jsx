@@ -100,22 +100,27 @@ function Cola() {
             <th>Número de Orden</th>
           </tr>
         </thead>
-        <tbody>
-          {pedidos.map((pedido, index) => (
-            <tr key={index}>
-              <td>{pedido.Id_pedidos}</td>
-              <td>{pedido.OrdenTxt}</td>
-              <td>{pedido.Cantidad}</td>
-              <td>{pedido.Llaves}</td>
-              <td>{pedido.Comentario}</td>
-              <td>{pedido.Precio}</td>
-              <td>{pedido.Estado}</td>
-              <td>{pedido.Barra}</td>
-              <td>{pedido.Cliente}</td>
-              <td>{pedido.NumOrden}</td>
-            </tr>
-          ))}
-        </tbody>
+      <tbody>
+  {pedidos.filter(pedido => pedido.Estado === 0).map((pedido, index) => (
+    <tr key={index}>
+      <td>{pedido.Id_pedidos}</td>
+      <td>{pedido.OrdenTxt}</td>
+      <td>{pedido.Cantidad}</td>
+      <td>{pedido.Llaves}</td>
+      <td>{pedido.Comentario}</td>
+      <td>{pedido.Precio}</td>
+      <td>{pedido.Estado}</td>
+      <td>{pedido.Barra}</td>
+      <td>{pedido.Cliente}</td>
+       {index === 0 || pedidos[index - 1].NumOrden !== pedido.NumOrden ? (
+          <td>{pedido.NumOrden}</td>
+        ) : (
+          <td style={{ visibility: 'hidden' }}>{pedido.NumOrden}</td>
+        )}
+    </tr>
+  ))}
+</tbody>
+
       </table>
     </div>
   );

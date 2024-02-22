@@ -2,8 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Orden_Cantidad_Comentario from './Componentes Caja/Orden_Cantidad_Comentario';
 import Botones from './Componentes Caja/Botones';
 import ListaCaja from './Componentes Caja/listaCaja';
-import {resetearValores,calcularTotalPrecios, cerrarPedido, Cantidad, TextoOrden, Tipos, cambiarPrecio, ArregloPedidos, NumOrden, cambiarNumOrden, resetearArregloPedidos, ListaPedido } from './Componentes Caja/partesOrden';
-import { obtenerPrecios, insertarPedido } from '../funciones backend/consultas';
+import {resetearValores,
+  calcularTotalPrecios, 
+  cerrarPedido, 
+  Cantidad, 
+  cambiarPrecio, 
+  ArregloPedidos, 
+  NumOrden, 
+  cambiarNumOrden, 
+  resetearArregloPedidos, 
+  ListaPedido} from './Componentes Caja/partesOrden';
+import { obtenerPrecios, insertarPedido, insertarEncargo } from '../funciones backend/consultas';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
@@ -11,14 +20,32 @@ function Caja() {
 
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalEncargoIsOpen, setModalEncargoIsOpen] = useState(false);
   const [precios, setPrecios] = useState([]);
   const [n, setn] = useState(NumOrden);
   const [total, setTotal] = useState(0);
+  const [nuevoCliente, setNuevoCliente] = useState('');
+  const [cambiarEstado,setcambiarEstado] = useState(0);
+
+  const handleNuevoClienteChange = (e) => {
+    setNuevoCliente(e.target.value);
+  };
 
   const handleResetClick = () => {
     resetearValores();
     resetearArregloPedidos();
 
+  };
+
+  function openModalEncargo() {
+    setModalEncargoIsOpen(true);
+    setcambiarEstado(1);
+     // Actualiza el valor de Estado en el localStorage
+  };
+  function closeModalEncargo() {
+    setModalEncargoIsOpen(false);
+    setcambiarEstado(0);
+   // Actualiza el valor de Estado en el localStorage
   };
 
   function openModal() {
@@ -153,19 +180,41 @@ function Caja() {
 
   function insertarPedidoHandler() {
     // Recorrer cada elemento de ArregloPedidos
-    for (let i = 0; i < ArregloPedidos.length; i++) {
-      const pedido = ArregloPedidos[i];
-      // Insertar el pedido actual
-      insertarPedido(pedido)
-        .then(data => {
-          console.log('Pedido insertado correctamente:', data);
-          // Lógica adicional después de insertar el pedido si es necesario
-        })
-        .catch(error => {
-          console.error('Error al insertar el pedido:', error);
-          // Manejar el error según sea necesario
-        });
+
+    if(cambiarEstado===0){
+      for (let i = 0; i < ArregloPedidos.length; i++) {
+        const pedido = ArregloPedidos[i];
+        // Insertar el pedido actual
+        insertarPedido(pedido)
+          .then(data => {
+            console.log('Pedido insertado correctamente:', data);
+            // Lógica adicional después de insertar el pedido si es necesario
+          })
+          .catch(error => {
+            console.error('Error al insertar el pedido:', error);
+            // Manejar el error según sea necesario
+          });
+      }
+
+    }else{
+      for (let i = 0; i < ArregloPedidos.length; i++) {
+        const pedido = ArregloPedidos[i];
+        // Insertar el pedido actual
+        insertarEncargo(pedido,nuevoCliente)
+          .then(data => {
+            console.log('Pedido insertado correctamente:', data);
+            // Lógica adicional después de insertar el pedido si es necesario
+          })
+          .catch(error => {
+            console.error('Error al insertar el pedido:', error);
+            // Manejar el error según sea necesario
+          });
+      }
+
+
     }
+
+
 
     // Incrementar el número de orden en 1
 
@@ -198,7 +247,7 @@ function Caja() {
       </div>
       <button onClick={precio}>Crear Orden</button>
       <button onClick={openModal}>Crear Pedido</button>
-      <button onClick={precio}>Crear Orden</button>
+      <button onClick={openModalEncargo}>Crear Encargo </button>
       <button className='cancelar' style={{scale:"80%", fontSize:"18px"}}  onClick={handleResetClick}>CANCELAR</button>
      
       <Modal
@@ -215,6 +264,29 @@ function Caja() {
         <div className="modal-footerV">
           <button onClick={insertarPedidoHandler}>Generar Voucher</button>
           <button onClick={closeModal}>Volver</button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={modalEncargoIsOpen}
+        onRequestClose={closeModalEncargo}
+        contentLabel="Ejemplo Modal"
+      >
+        <div className="modal-headerV">
+          <h2>Encargo</h2>
+        </div>
+        <input
+        type="text"
+        value={nuevoCliente}
+        onChange={handleNuevoClienteChange}
+        placeholder="Ingrese el nombre del nuevo cliente"
+      />
+        <div className="modal-bodyV">
+          <ListaCaja />
+        </div>
+        <div className="modal-footerV">
+          <button onClick={insertarPedidoHandler}>Generar Voucher</button>
+          <button onClick={closeModalEncargo}>Volver</button>
         </div>
       </Modal>
 

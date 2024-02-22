@@ -122,4 +122,25 @@ export const insertarPedido = async (datos) => {
   }
 };
 
+export const insertarEncargo = async (datos, n) => {
+  const datos_ordenados = {
+    OrdenTxt: datos.TextoOrden,
+    Cantidad: datos.Cantidad,
+    Llaves: datos.Llaves,
+    Comentario: datos.Comentario, // Corregido aquí
+    Precio: datos.Precio,
+    Estado: 1,
+    Barra: datos.Barra,
+    Cliente: n,
+    NumOrden: datos.NumOrden
+  };
+
+  try {
+    const response = await axios.post('http://localhost:5150/insertar-pedido', datos_ordenados);
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar la solicitud POST:', error);
+    throw error;
+  }
+};
 

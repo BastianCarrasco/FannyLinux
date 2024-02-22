@@ -16,6 +16,19 @@ export let ArregloPedidos = JSON.parse(localStorage.getItem('ArregloPedidos')) |
 
 export let Tipos = JSON.parse(localStorage.getItem('Tipos')) || [];
 
+export function cambiarEncargo() {
+    const nuevoArreglo = ArregloPedidos.map(item => {
+      return {
+        ...item,
+        Encargo: 1
+      };
+    });
+  
+    ArregloPedidos = nuevoArreglo;
+    localStorage.setItem('ArregloPedidos', JSON.stringify(nuevoArreglo));
+  }
+  
+
 
 // Función para agregar un nuevo elemento al arreglo Pedido y guardarlo en localStorage
 export function agregarAlPedido(item) {
