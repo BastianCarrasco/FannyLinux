@@ -264,6 +264,7 @@ export function eliminarPedido(posicion) {
     // Actualiza el localStorage con el nuevo arreglo de pedidos
     localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
 }
+
 export function calcularTotalPrecios() {
     // Inicializar la suma total en 0
     let total = 0;
@@ -296,4 +297,76 @@ export function calcularTotalPrecios() {
         // Informar al usuario que ListaPedido está vacía
         console.log('ListaPedido está vacía. No se puede eliminar ningún elemento.');
     }
+}
+
+export function manejarEntregaEmpanada(posicion) {
+    // Verifica si la posición proporcionada es válida
+    if (posicion < 0 || posicion >= ArregloPedidos.length) {
+        console.error("La posición proporcionada no es válida.");
+        return;
+    }
+
+    const pedido = ArregloPedidos[posicion];
+
+    // Verifica si el comentario contiene la frase "se entregó la empanada"
+    const tieneEntregaEmpanada = pedido.Comentario.includes('- Se entregó la empanada');
+
+    if (!tieneEntregaEmpanada) {
+        // Agrega la frase "se entregó la empanada" al comentario
+        pedido.Comentario += '\n- Se entregó la empanada'; // Agrega un salto de línea al final
+    } else {
+        // Borra la frase "se entregó la empanada" del comentario
+        pedido.Comentario = pedido.Comentario.replace('\n- Se entregó la empanada', '');
+    }
+
+    // Actualiza el arreglo de pedidos en el localStorage
+    localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
+}
+
+
+export function manejarEntregaBebida(posicion) {
+    // Verifica si la posición proporcionada es válida
+    if (posicion < 0 || posicion >= ArregloPedidos.length) {
+        console.error("La posición proporcionada no es válida.");
+        return;
+    }
+
+    const pedido = ArregloPedidos[posicion];
+
+    // Verifica si el comentario contiene la frase "se entregó la empanada"
+    const tieneEntregaEmpanada = pedido.Comentario.includes('- Se entregó la Bebida');
+
+    if (!tieneEntregaEmpanada) {
+        // Agrega la frase "se entregó la empanada" al comentario
+        pedido.Comentario += '\n- Se entregó la Bebida';
+    } else {
+        // Borra la frase "se entregó la empanada" del comentario
+        pedido.Comentario = pedido.Comentario.replace('\n- Se entregó la Bebida', '');
+    }
+
+    // Actualiza el arreglo de pedidos en el localStorage
+    localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
+}
+export function manejarEntregaPostre(posicion) {
+    // Verifica si la posición proporcionada es válida
+    if (posicion < 0 || posicion >= ArregloPedidos.length) {
+        console.error("La posición proporcionada no es válida.");
+        return;
+    }
+
+    const pedido = ArregloPedidos[posicion];
+
+    // Verifica si el comentario contiene la frase "se entregó la empanada"
+    const tieneEntregaEmpanada = pedido.Comentario.includes('- Se entregó la Postre');
+
+    if (!tieneEntregaEmpanada) {
+        // Agrega la frase "se entregó la empanada" al comentario
+        pedido.Comentario += '\n- Se entregó la Postre';
+    } else {
+        // Borra la frase "se entregó la empanada" del comentario
+        pedido.Comentario = pedido.Comentario.replace('\n- Se entregó la Postre', '');
+    }
+
+    // Actualiza el arreglo de pedidos en el localStorage
+    localStorage.setItem('ArregloPedidos', JSON.stringify(ArregloPedidos));
 }

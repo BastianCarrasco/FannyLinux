@@ -107,7 +107,11 @@ function Cola() {
       <td>{pedido.OrdenTxt}</td>
       <td>{pedido.Cantidad}</td>
       <td>{pedido.Llaves}</td>
-      <td>{pedido.Comentario}</td>
+      <td>
+                {pedido.Comentario.split('\n').map((linea, i) => (
+                  <div key={i}>{linea}</div>
+                ))}
+              </td>
       <td>{pedido.Precio}</td>
       <td>{pedido.Estado}</td>
       <td>{pedido.Barra}</td>

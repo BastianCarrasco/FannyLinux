@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { eliminarPedido } from './partesOrden';
+import { eliminarPedido, manejarEntregaEmpanada, manejarEntregaBebida,manejarEntregaPostre } from './partesOrden';
 import { FaTrashAlt, FaIceCream, FaBreadSlice, FaMugHot } from 'react-icons/fa'; // Importa los íconos desde React Icons
 
 function ListaCaja() {
@@ -41,38 +41,53 @@ function ListaCaja() {
     setPedidos(newPedidos);
   };
 
+  const handlerEmpanada =(index)=>{
+    manejarEntregaEmpanada(index);
+  };
+  const handlerBebida =(index)=>{
+    manejarEntregaBebida(index);
+  };
+  const handlerPostre =(index)=>{
+    manejarEntregaPostre(index);
+  };
+
   return (
     <div>
       <h2>Lista de Pedidos - Total: ${sumaTotalPrecios.toFixed(2)}</h2> {/* Mostrar la suma total de precios */}
-      <table style={{textAlign:"Left"}} className="full-width-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Texto de la Orden</th>
-            <th>#</th>
-            <th>Comentario</th>
-            <th>Precio</th>
-            <th>Acciones</th> {/* Nueva columna para acciones */}
-          </tr>
-        </thead>
-        <tbody>
-          {pedidos.map((pedido, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{pedido.TextoOrden}</td>
-              <td>{"x"+pedido.Cantidad}</td>
-              <td>{pedido.Comentario}</td>
-              <td>{pedido.Precio}</td>
-              <td>
-                <FaTrashAlt onClick={() => handleBorrarPedido(index)} /> {/* Ícono de papelera */}
-                <FaIceCream /> {/* Ícono de helado */}
-                <FaBreadSlice /> {/* Ícono de pan */}
-                <FaMugHot /> {/* Ícono de bebida */}
-              </td>
-            </tr>
+      <table style={{textAlign:"left"}} className="full-width-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Texto de la Orden</th>
+      <th>#</th>
+      <th>Comentario</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {pedidos.map((pedido, index) => (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>{pedido.TextoOrden}</td>
+        <td>{"x" + pedido.Cantidad}</td>
+        <td>
+          {pedido.Comentario.split('\n').map((linea, i) => (
+            <div key={i}>{linea}</div>
           ))}
-        </tbody>
-      </table>
+        </td>
+        <td>{pedido.Precio}</td>
+        <td>
+          <FaTrashAlt onClick={() => handleBorrarPedido(index)} />
+          <FaIceCream onClick={() => handlerPostre(index)} />
+          <FaBreadSlice onClick={() => handlerEmpanada(index)} />
+          <FaMugHot onClick={() => handlerBebida(index)} />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
     </div>
   );
 }
