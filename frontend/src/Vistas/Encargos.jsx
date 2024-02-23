@@ -3,6 +3,11 @@ import axios from 'axios';
 import { obtenerDatosPedidos } from '../funciones backend/consultas';
 import { FaUndoAlt } from 'react-icons/fa';
 import Modal from 'react-modal';
+import { actualizarEstado } from '../funciones backend/consultas';
+
+import JsBarcode from 'jsbarcode';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function Encargos() {
   const [pedidos, setPedidos] = useState([]);
@@ -51,6 +56,89 @@ function Encargos() {
     setNumerosOrdenMostrados(prevState => [...prevState, numeroOrden]);
     setRowSpanCount(1); // Reiniciar el contador de filas fusionadas
   };
+
+  const createAndPrintPDF = (pedidosConNumeroOrden, Barra) => {
+    // Crear un nuevo objeto jsPDF
+    const doc = new jsPDF({
+      format: [80, 200], // Anchura y altura en milímetros
+    });
+
+    // Generar el código de barras
+    const barcodeValue = Barra; // Valor del código de barras
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, barcodeValue, { format: 'CODE128' });
+    const barcodeImageUrl = canvas.toDataURL('image/png');
+
+    // Cargar la imagen del código de barras en el PDF
+    doc.addImage(barcodeImageUrl, 'PNG', 10, 10, 60, 20); // Ajustar el tamaño del código de barras para que quepa en 80mm
+
+    // Definir el tamaño de fuente para el número de orden
+    const fontSizeNumOrden = 16;
+    doc.setFontSize(fontSizeNumOrden);
+
+    // Definir el tamaño de fuente para el resto del contenido
+    const fontSizeResto = 9;
+    doc.setFontSize(fontSizeResto);
+
+    // Definir el contenido del PDF
+    let content = 'Datos de los pedidos:\n\n';
+    let previousNumOrden = null;
+    let totalPrice = 0;
+
+    // Agregar cada elemento del arreglo al contenido del PDF
+    pedidosConNumeroOrden.forEach((pedido, index) => {
+        // Verificar si el número de orden es diferente al pedido anterior
+        if (pedido.NumOrden !== previousNumOrden) {
+            doc.setFontSize(fontSizeNumOrden); // Establecer el tamaño de fuente para el número de orden
+            content += `Número de Orden: ${pedido.NumOrden}\n`;
+            previousNumOrden = pedido.NumOrden;
+        }
+
+        // Establecer el tamaño de fuente para el resto del contenido
+        doc.setFontSize(fontSizeResto);
+
+        content += `Orden: ${pedido.OrdenTxt}\nCantidad: ${pedido.Cantidad}\nComentario: ${pedido.Comentario}\nPrecio: ${pedido.Precio}\n`;
+        
+        // Sumar el precio al total
+        totalPrice += parseFloat(pedido.Precio);
+     
+        content += '\n'; // Agregar una línea en blanco entre cada pedido
+    });
+
+    // Agregar el total al contenido del PDF
+    content += `TOTAL: ${totalPrice.toFixed(2)}\n`;
+
+    // Dividir el contenido en líneas que quepan en 80mm de ancho
+    const lines = doc.splitTextToSize(content, 80);
+
+    // Agregar las líneas al PDF
+    doc.text(lines, 10, 40);
+
+    // Guardar el archivo PDF
+    doc.save('boleta.pdf');
+
+    // Imprimir el archivo PDF después de guardarlo
+    doc.autoPrint();
+};
+
+function crearboleta (){
+  actualizarEstado(pedidosConNumeroOrden[0].Barra);
+  createAndPrintPDF(pedidosConNumeroOrden,pedidosConNumeroOrden[0].Barra);
+
+  async function fetchPedidos() {
+    try {
+      const data = await obtenerDatosPedidos();
+      setPedidos(data);
+    } catch (error) {
+      console.error('Error al obtener los pedidos:', error);
+    }
+  }
+
+  fetchPedidos();
+
+};
+
+
 
   return (
     <div>
@@ -144,6 +232,7 @@ function Encargos() {
             </tbody>
           </table>
           <button onClick={closeModal}>Cerrar</button>
+          <button onClick={crearboleta}>Boleta</button>
         </div>
       </Modal>
     </div>

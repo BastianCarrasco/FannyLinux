@@ -90,15 +90,19 @@ export async function obtenerPrecios() {
   }
 }
 
-export const insertarVenta = async (datos) => {
+export const insertarVenta = async (ventaData) => {
   try {
-    const response = await axios.post('http://localhost:5150/insertar-ventas', datos);
+    const response = await axios.post(
+      'http://localhost:5150/insertar-venta',
+      ventaData
+    );
     return response.data;
   } catch (error) {
     console.error('Error al enviar la solicitud POST:', error);
     throw error;
   }
 };
+
 
 export const insertarPedido = async (datos) => {
   const datos_ordenados = {
@@ -143,4 +147,19 @@ export const insertarEncargo = async (datos, n) => {
     throw error;
   }
 };
+
+export const actualizarEstado = async (barra) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:5150/actualizar-estado/${barra}`,
+      { estado: 2 } // Aquí se establece el estado como 2
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar la solicitud PUT:', error);
+    throw error;
+  }
+};
+
+
 

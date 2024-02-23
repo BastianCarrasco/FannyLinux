@@ -197,19 +197,6 @@ app.put('/actualizar-stockG', (req, res) => {
   });
 });
 
-app.post('/insertar-ventas', (req, res) => {
-  const { Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta } = req.body;
-  const query = `INSERT INTO Ventas (Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  db.query(query, [Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden, FechaVenta], (error, results) => {
-    if (error) {
-      console.error('Error al insertar en la base de datos:', error);
-      res.status(500).json({ error: 'Error al insertar en la base de datos' });
-    } else {
-      res.status(200).json({ message: 'Datos insertados correctamente' });
-    }
-  });
-});
-
 
 app.post('/insertar-pedido', (req, res) => {
   const { OrdenTxt, Cantidad, Llaves, Comentario, Precio, Estado, Barra, Cliente, NumOrden } = req.body;
@@ -249,6 +236,46 @@ app.delete('/eliminar-pedidos-barra', (req, res) => {
       res.status(500).json({ error: 'Error al eliminar pedidos en la base de datos' });
     } else {
       res.status(200).json({ message: 'Pedidos eliminados correctamente' });
+    }
+  });
+});
+
+app.put('/actualizar-estado/:barra', (req, res) => {
+  const { barra } = req.params;
+
+  // Verificar si se proporciona el valor del estado en el cuerpo de la solicitud
+  const { estado } = req.body;
+  if (estado === undefined) {
+    return res.status(400).json({ error: 'El parámetro estado es obligatorio' });
+  }
+
+  // Query de actualización con parámetros
+  const sql = "UPDATE `Pedidos` SET `Estado` = ? WHERE `Pedidos`.`Barra` = ?";
+
+  // Ejecutar la consulta en la base de datos utilizando db.query con los parámetros
+  db.query(sql, [estado, barra], (err, result) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ error: 'Error al actualizar el estado' });
+    } else {
+      console.log('Estado actualizado correctamente');
+      res.status(200).json({ message: 'Estado actualizado correctamente' });
+    }
+  });
+});
+
+app.post('/insertar-venta', (req, res) => {
+  const { Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden } = req.body;
+
+  // Realizar la inserción en la base de datos
+  const sql = "INSERT INTO Ventas (Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden) VALUES (?, ?, ?, ?, ?, ?)";
+  db.query(sql, [Estado, Pedido, Cantidad, Comentario, Precio, NumeroOrden], (err, result) => {
+    if (err) {
+      console.error('Error al insertar la venta:', err);
+      res.status(500).json({ error: 'Error al insertar la venta' });
+    } else {
+      console.log('Venta insertada correctamente');
+      res.status(200).json({ message: 'Venta insertada correctamente' });
     }
   });
 });

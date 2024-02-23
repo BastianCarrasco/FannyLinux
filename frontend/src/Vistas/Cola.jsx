@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Importa Axios si aún no lo has hecho
-import { obtenerDatosPedidos } from '../funciones backend/consultas';
+import { obtenerDatosPedidos, insertarVenta } from '../funciones backend/consultas';
 
 function Cola() {
   const [pedidos, setPedidos] = useState([]);
@@ -19,17 +19,36 @@ function Cola() {
     fetchPedidos();
   }, []);
 
+  
   useEffect(() => {
     console.log(inputValue);
-    const barraEnPedidos = pedidos.find(pedido => pedido.Barra === parseInt(inputValue));
+    const isNineDigits = /^\d{9}$/.test(inputValue); // Verificar si inputValue tiene 9 dígitos
+    const barraEnPedidos = pedidos.find(pedido => pedido.Barra === parseInt(inputValue) && isNineDigits); // Verificar si Barra es igual a inputValue y si tiene 9 dígitos
     console.log(Boolean(barraEnPedidos));
-
-    if (Boolean(barraEnPedidos)) {
-      axios.delete('http://localhost:5150/eliminar-pedidos-barra', {
-        data: {
-          barra: inputValue
+  
+    const handleVenta = async () => {
+      if (Boolean(barraEnPedidos)) {
+        const ventaData = {
+          Estado: barraEnPedidos.Estado,
+          Pedido: barraEnPedidos.OrdenTxt,
+          Cantidad: barraEnPedidos.Cantidad,
+          Comentario: barraEnPedidos.Comentario,
+          Precio: barraEnPedidos.Precio,
+          NumeroOrden: barraEnPedidos.NumOrden
+        };
+  
+        try {
+          const response = await insertarVenta(ventaData);
+          console.log('Venta insertada correctamente:', response);
+        } catch (error) {
+          console.error('Error al insertar la venta:', error);
         }
-      })
+  
+        axios.delete('http://localhost:5150/eliminar-pedidos-barra', {
+          data: {
+            barra: inputValue
+          }
+        })
         .then(response => {
           console.log(response.data); // Mensaje de éxito
           // Actualizar los pedidos después de eliminar el pedido
@@ -40,8 +59,11 @@ function Cola() {
         .catch(error => {
           console.error('Error al eliminar pedidos:', error); // Manejo de errores
         });
-    }
-
+      }
+    };
+  
+    handleVenta();
+    
     async function fetchPedidos() {
       try {
         const data = await obtenerDatosPedidos();
@@ -50,12 +72,12 @@ function Cola() {
         console.error('Error al obtener los pedidos:', error);
       }
     }
-
+  
     fetchPedidos();
-
-
-
+  
   }, [inputValue, pedidos]);
+  
+
 
 
 
