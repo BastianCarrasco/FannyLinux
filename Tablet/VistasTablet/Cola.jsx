@@ -8,14 +8,21 @@ const Cola = () => {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    // Llama a la función para obtener los datos de pedidos al cargar el componente
-    obtenerDatosPedidos()
-      .then(data => {
-        setPedidos(data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los datos de pedidos:', error);
-      });
+    const intervalId = setInterval(() => {
+      // Llama a la función para obtener los datos de pedidos cada segundo
+      obtenerDatosPedidos()
+        .then(data => {
+          // Filtra los datos para mostrar solo aquellos con Estado === 1
+          const pedidosActivos = data.filter(item => item.Estado === 0);
+          setPedidos(pedidosActivos);
+        })
+        .catch(error => {
+          console.error('Error al obtener los datos de pedidos:', error);
+        });
+    }, 1000); // 1000 milisegundos = 1 segundo
+
+    // Limpia el intervalo cuando el componente se desmonta
+    return () => clearInterval(intervalId);
   }, []);
 
   // Función para renderizar cada elemento de la lista

@@ -1,5 +1,5 @@
 
-
+import axios from 'axios';
 export async function obtenerDatosPedidos() {
     try {
       const response = await fetch('http://192.168.0.12:5150/obtener-pedidos');
