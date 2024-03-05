@@ -54,9 +54,16 @@ function Botones() {
     // Función para obtener el día actual y su valor numérico
     const obtenerDiaActual = () => {
         const hoy = new Date();
-        const dia = hoy.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase(); // Obtener el nombre completo del día en español
+        let dia = hoy.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase(); // Obtener el nombre completo del día en español
+    
+        // Si es domingo, ajustar el día para que sea lunes
+        if (dia === 'DOMINGO') {
+            dia = 'LUNES';
+        }
+    
         return dia;
     };
+    
 
     // Obtener el día actual
     const diaActual = obtenerDiaActual();

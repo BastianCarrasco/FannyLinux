@@ -272,6 +272,8 @@ function Caja() {
           });
       }
 
+      createAndPrintPDF(ArregloPedidos,Barra);
+
     }else{
       for (let i = 0; i < ArregloPedidos.length; i++) {
         const pedido = ArregloPedidos[i];
@@ -291,7 +293,7 @@ function Caja() {
     }
 
 
-    createAndPrintPDF(ArregloPedidos,Barra);
+    
     // Incrementar el número de orden en 1
 
     // Obtener el nuevo valor de NumOrden y sumarle 1
